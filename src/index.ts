@@ -4,6 +4,7 @@ import isStartMessage from './messageFilters/isStartMessage';
 import isStopMessage from './messageFilters/isStopMessage';
 import cheerio from 'cheerio';
 import https from 'https'
+import { linkSync } from 'fs';
 
 
 const client = new Discord.Client();
@@ -35,7 +36,7 @@ function scrapeFreebies() {
           
         
           console.log(links);
-          
+          oldFreebies=links;
     });
           
 
@@ -68,6 +69,7 @@ client.on('message', message => {
 
         if (isStartMessage(message)) {
             message.channel.send("Starting spam!");
+            message.channel.send("https://gg.deals"+oldFreebies[0])
         }
 
         if (isStopMessage(message)) {
