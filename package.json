@@ -1,0 +1,44 @@
+{
+  "name": "gerald-the-discord-bot",
+  "version": "1.0.0",
+  "description": "A Discord bot that recommends computer game giveaways.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "start": "./node_modules/.bin/tsc-watch --onSuccess \"node .\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SparrowBrain/gerald-the-discord-bot.git"
+  },
+  "keywords": [
+    "discord",
+    "free"
+  ],
+  "author": "Qwx",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SparrowBrain/gerald-the-discord-bot/issues"
+  },
+  "homepage": "https://github.com/SparrowBrain/gerald-the-discord-bot#readme",
+  "devDependencies": {
+    "@types/node": "^13.13.5",
+    "@types/ws": "^7.2.4",
+    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/parser": "^2.31.0",
+    "eslint": "^7.0.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "tsc-watch": "^4.2.3",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0"
+  }
+}
