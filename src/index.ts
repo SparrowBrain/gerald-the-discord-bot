@@ -67,12 +67,12 @@ client.on('message', message => {
     if (message.mentions.users.first()?.id === geraldId) {
         console.log(message.toJSON())
 
-        if (isStartMessage(message)) {
+        if (isStartMessage({content:message.content})) {
             message.channel.send("Starting spam!");
-            message.channel.send("https://gg.deals"+oldFreebies[0])
+            message.channel.send("https://gg.deals" + oldFreebies[0])
         }
 
-        if (isStopMessage(message)) {
+        if (isStopMessage({content:message.content})) {
             message.channel.send("ok...");
         }
     }
