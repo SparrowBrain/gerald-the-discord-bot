@@ -3,29 +3,28 @@ import { Token } from './config';
 import isStartMessage from './messageFilters/isStartMessage';
 import isStopMessage from './messageFilters/isStopMessage';
 
-import { GgScrapper } from './ggScrapper';
+import { GgScraper } from './ggScraper';
 
 
 const client = new Discord.Client();
 let geraldId: string | undefined;
 let oldFreebies: string[] = [];
-const ggScrapper = new GgScrapper();
+const ggScraper = new GgScraper();
 
 
 
 client.once('ready', () => {
     console.log('Ready!');
-    geraldId = client.user?.id
+    geraldId = client.user?.id;
 });
 
-ggScrapper.on('freebies-fetched', urls =>{
-    oldFreebies = urls
+ggScraper.on('freebies-fetched', urls =>{
+    oldFreebies = urls;
 })
 
 
-
 client.login(Token);
-ggScrapper.fetchFreebies();
+ggScraper.fetchFreebies();
 
 
 client.on('message', message => {
