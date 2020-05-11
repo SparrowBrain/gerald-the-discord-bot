@@ -3,17 +3,14 @@ import events from 'events';
 import cheerio from 'cheerio';
 import { IncomingMessage } from 'http';
 
+declare interface GgScraper {
+    on(event: 'freebies-fetched', listener: (urls: string[]) => void): this;
+}
 
-// export declare interface GgScraper {
-//     on(event: 'freebies-fetched', listener: (urls: string[]) => void): this;
-//     on(event: string, listener: Function): this;
-// }
-
-export class GgScraper extends events.EventEmitter {
+class GgScraper extends events.EventEmitter {
 
     fetchFreebies() {
-
-        https.get('https://gg.deals/news/freebies/', function(this: GgScraper, resp:IncomingMessage){
+        https.get('https://gg.deals/news/freebies/', function (resp: IncomingMessage) {
 
             console.log("Got response: " + resp.statusCode);
             let data = '';
@@ -22,7 +19,7 @@ export class GgScraper extends events.EventEmitter {
                 data += chunk;
             });
             // The whole response has been received. Print out the result.
-            resp.on('end', function(this: GgScraper) {
+            resp.on('end', function () {
                 console.log(data);
                 const $ = cheerio.load(data);
                 let links = [...new Set($('a[href^="/freebie/"]')
@@ -31,13 +28,14 @@ export class GgScraper extends events.EventEmitter {
                         return $(el).attr('href');
                     }).get())].filter((x: string) => !x.includes('#'));
                 console.log(links);
-                // this.emitFreebiesFetched(links);
-                this.emit('freebies-fetched', links);
+                ggScraper.emit('freebies-fetched', links);
             });
         })
-        .on('error', function (e) {
-            console.log("Got error: " + e.message); 
+            .on('error', function (e) {
+                console.log("Got error: " + e.message);
             });
     }
 
 }
+
+export const ggScraper = new GgScraper();
