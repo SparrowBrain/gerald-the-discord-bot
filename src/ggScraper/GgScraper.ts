@@ -9,7 +9,7 @@ export declare interface GgScraper {
 export class GgScraper extends events.EventEmitter {
     fetchFreebies() {
         const instance: GgScraper = this;
-        https.get(WEBSITE_DOMAIN + '/news/freebies/', function (resp: IncomingMessage) {
+        https.get(WEBSITE_DOMAIN + '/news/?availability=1&tags=1&type=6', function (resp: IncomingMessage) {
             console.log("Got response: " + resp.statusCode);
             let data = '';
             // A chunk of data has been recieved.
