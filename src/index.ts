@@ -47,6 +47,7 @@ client.on('message', message => {
                 message.channel.send('ok...');
                 const listener = subscriptions.get(message.channel.id) as Subscription;
                 memory.off('new-link-found', listener);
+                subscriptions.delete(message.channel.id);
             } else {
                 message.channel.send("I'm not doing anythin...");
             }
