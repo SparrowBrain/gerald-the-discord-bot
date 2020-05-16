@@ -5,26 +5,19 @@ import isStopMessage from './messageFilters/isStopMessage';
 import ggScraper from './ggScraper';
 import memory from './memory';
 
-
-
 const client = new Discord.Client();
 let geraldId: string | undefined;
-let oldFreebies: string[] = [];
-
-
 
 client.once('ready', () => {
     console.log('Ready!');
     geraldId = client.user?.id;
 });
 
+client.login(Token);
+
 ggScraper.on('freebies-fetched', (urls: string[]): void => {
     memory.memorizeLinks(urls);
-})
-
-
-
-client.login(Token);
+});
 
 ggScraper.fetchFreebies();
 
@@ -54,6 +47,7 @@ client.on('message', message => {
                 message.channel.send('ok...');
                 const listener = subscriptions.get(message.channel.id) as Subscription;
                 memory.off('new-link-found', listener);
+                subscriptions.delete(message.channel.id);
             } else {
                 message.channel.send("I'm not doing anythin...");
             }
