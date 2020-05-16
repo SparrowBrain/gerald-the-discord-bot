@@ -24,7 +24,7 @@ ggScraper.on('freebies-fetched', (urls: string[]): void => {
     memory.memorizeLinks(urls);
 });
 ggScraper.fetchFreebies();
-setInterval(ggScraper.fetchFreebies, 1000 * 60 * 30);
+setInterval(() => ggScraper.fetchFreebies(), 1000 * 60 * 10);
 
 client.on('message', message => {
     if (message.mentions.users.first()?.id === geraldId) {
