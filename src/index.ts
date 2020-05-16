@@ -35,7 +35,7 @@ client.on('message', message => {
         if (isStartMessage({ content: message.content })) {
 
             message.channel.send("Starting spam!");
-            message.channel.send("https://gg.deals" + oldFreebies[0])
+            message.channel.send(oldFreebies[0])
         }
 
         if (isStopMessage({ content: message.content })) {
