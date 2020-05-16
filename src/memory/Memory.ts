@@ -11,6 +11,7 @@ export class Memory extends EventEmitter {
         const newLinks = findNewEntries(this.knownLinks, links);
         this.knownLinks = new Set<string>(links);
         newLinks.forEach(link => {
+            console.log("new link found: " + link);
             this.emit('new-link-found', link);
         });
     };
