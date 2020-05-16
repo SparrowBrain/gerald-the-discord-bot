@@ -10,6 +10,12 @@ export class SubscriptionManager extends EventEmitter {
 
     subscriptions: Map<string, Broadcast> = new Map();
 
+    constructor(channels: TextChannel[] | DMChannel[] | NewsChannel[]) {
+        super();
+
+        channels.forEach((channel: TextChannel | DMChannel | NewsChannel) => this.addSubscription(channel));
+    }
+
     public broadcastMessage(message: string): void {
         this.subscriptions.forEach(send => {
             send(message);
@@ -20,10 +26,7 @@ export class SubscriptionManager extends EventEmitter {
         if (this.subscriptions.has(channel.id)) {
             channel.send("Already spammin'...");
         } else {
-            const sendToChannel = (link: string): void => {
-                channel.send(link);
-            };
-            this.subscriptions.set(channel.id, sendToChannel);
+            this.addSubscription(channel);
             channel.send('Starting spam!');
         }
     }
@@ -31,10 +34,22 @@ export class SubscriptionManager extends EventEmitter {
     public unsubscribe(channel: TextChannel | DMChannel | NewsChannel) {
         if (this.subscriptions.has(channel.id)) {
             channel.send('ok...');
-            this.subscriptions.delete(channel.id);
+            this.removeSubscription(channel);
         } else {
             channel.send("I'm not doing anythin'...");
         }
     }
 
+    private addSubscription(channel: DMChannel | TextChannel | NewsChannel) {
+        const sendToChannel = (link: string): void => {
+            channel.send(link);
+        };
+        this.subscriptions.set(channel.id, sendToChannel);
+        this.emit('subscriptions-changed');
+    }
+
+    private removeSubscription(channel: DMChannel | TextChannel | NewsChannel) {
+        this.subscriptions.delete(channel.id);
+        this.emit('subscriptions-changed');
+    }
 }
