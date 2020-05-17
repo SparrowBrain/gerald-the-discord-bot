@@ -3,7 +3,7 @@ import { TextChannel, DMChannel, NewsChannel } from "discord.js";
 import { EventEmitter } from "events";
 
 export declare interface SubscriptionManager {
-    on(event: 'subscriptions-changed', listener: () => void): this;
+    on(event: 'subscriptions-changed', listener: (channelIds: string[]) => void): this;
 }
 
 export class SubscriptionManager extends EventEmitter {
