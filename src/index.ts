@@ -4,21 +4,24 @@ import isStartMessage from './messageFilters/isStartMessage';
 import isStopMessage from './messageFilters/isStopMessage';
 import ggScraper from './ggScraper';
 import memory from './memory';
-import subscriptionManager from './subscriptions';
+import { initSubscrptionManager } from './subscriptions';
+import { SubscriptionManager } from './subscriptions/SubscriptionManager';
 
 const client = new Discord.Client();
 let geraldId: string | undefined;
+let subscriptionManager: SubscriptionManager;
 
-client.once('ready', () => {
+client.once('ready', async () => {
     console.log('Ready!');
     geraldId = client.user?.id;
+    subscriptionManager = await initSubscrptionManager(client);
+
+    memory.on('new-link-found', (link) => {
+        subscriptionManager.broadcastMessage(link);
+    })
 });
 
 client.login(Token);
-
-memory.on('new-link-found', (link) => {
-    subscriptionManager.broadcastMessage(link);
-})
 
 ggScraper.on('freebies-fetched', (urls: string[]): void => {
     memory.memorizeLinks(urls);
