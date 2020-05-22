@@ -7,8 +7,9 @@ import { fetchChannels } from "./fetchChannels";
 
 export const initSubscrptionManager = async (client: Client): Promise<SubscriptionManager> => {
     const ids = loadFromFile();
-    // const channels = await fetchChannels(client, ids)
-    const subscriptionManager = new SubscriptionManager([]);
+    console.log('loaded channel ids: ' + ids)
+    const channels = await fetchChannels(client, ids)
+    const subscriptionManager = new SubscriptionManager(channels);
     subscriptionManager.on('subscriptions-changed', (ids: string[]) => {
         saveToFile(ids);
     });

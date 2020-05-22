@@ -1,5 +1,5 @@
 import { Broadcast } from "./Broadcast";
-import { TextChannel, DMChannel, NewsChannel } from "discord.js";
+import { TextChannel, DMChannel, NewsChannel, Channel } from "discord.js";
 import { EventEmitter } from "events";
 
 export declare interface SubscriptionManager {
@@ -10,7 +10,7 @@ export class SubscriptionManager extends EventEmitter {
 
     subscriptions: Map<string, Broadcast> = new Map();
 
-    constructor(channels: TextChannel[] | DMChannel[] | NewsChannel[]) {
+    constructor(channels: (DMChannel | NewsChannel | TextChannel)[]) {
         super();
 
         channels.forEach((channel: TextChannel | DMChannel | NewsChannel) => this.addSubscription(channel));
@@ -45,11 +45,13 @@ export class SubscriptionManager extends EventEmitter {
             channel.send(link);
         };
         this.subscriptions.set(channel.id, sendToChannel);
-        this.emit('subscriptions-changed');
+        this.emit('subscriptions-changed', [...this.subscriptions.keys()]);
+        console.log('subscription added to ' + channel.id);
     }
 
     private removeSubscription(channel: DMChannel | TextChannel | NewsChannel) {
         this.subscriptions.delete(channel.id);
-        this.emit('subscriptions-changed');
+        this.emit('subscriptions-changed', [...this.subscriptions.keys()]);
+        console.log('subscription removed from ' + channel.id)
     }
 }

@@ -1,9 +1,13 @@
 import fs from 'fs'
+import { SubsFile } from '../config';
 
 export const saveToFile = (channelIds: string[]): void => {
-    fs.writeFileSync('subs.json', channelIds, 'utf-8');
+    fs.writeFileSync(SubsFile, channelIds, 'utf-8');
 }
 
 export const loadFromFile = (): string[] => {
-    return fs.readFileSync('subs.json', 'utf-8').split(',');
+    if (!fs.existsSync(SubsFile)) {
+        return [];
+    }
+    return fs.readFileSync(SubsFile, 'utf-8').split(',');
 }
