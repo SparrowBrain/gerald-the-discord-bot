@@ -1,5 +1,5 @@
 import Discord from 'discord.js';
-import { Token } from './config';
+import { Token, FetchIntervalMs } from './config';
 import isStartMessage from './messageFilters/isStartMessage';
 import isStopMessage from './messageFilters/isStopMessage';
 import ggScraper from './ggScraper';
@@ -27,7 +27,7 @@ ggScraper.on('freebies-fetched', (urls: string[]): void => {
     memory.memorizeLinks(urls);
 });
 ggScraper.fetchFreebies();
-setInterval(() => ggScraper.fetchFreebies(), 1000 * 60 * 10);
+setInterval(() => ggScraper.fetchFreebies(), FetchIntervalMs);
 
 client.on('message', message => {
     if (message.mentions.users.first()?.id === geraldId) {
