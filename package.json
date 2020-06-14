@@ -46,7 +46,7 @@
     "serve": "^11.3.0",
     "source-map-support": "^0.5.19",
     "ts-jest": "^25.5.1",
-    "ts-node-dev": "^1.0.0-pre.44",
+    "ts-node-dev": "^1.0.0-pre.47",
     "tsc-watch": "^4.2.3",
     "typescript": "^3.8.3"
   },
