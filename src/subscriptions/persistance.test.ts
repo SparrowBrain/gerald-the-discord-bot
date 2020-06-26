@@ -1,5 +1,4 @@
 import { saveToFile, loadFromFile } from './persistance'
-// import * as config from '../config';
 jest.mock('../config', () => { return { SubsFile: 'subs-test.txt' } });
 
 describe('persistane', () => {

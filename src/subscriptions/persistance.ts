@@ -9,5 +9,6 @@ export const loadFromFile = (): string[] => {
     if (!fs.existsSync(SubsFile)) {
         return [];
     }
+
     return fs.readFileSync(SubsFile, 'utf-8').split(',');
 }
