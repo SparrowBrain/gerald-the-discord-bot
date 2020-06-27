@@ -4,17 +4,19 @@ on:
   push:
     branches: [ master ]
 
-env:
-  VERSION:
-   - run: echo date -u +%Y%m%d_%H%M%S_%N
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    outputs:
+      version: ${{ steps.output_version.outputs.version }}
+
     steps:
-    # - name: Create version
-    #   run: echo "::set-env name=VERSION::$(date -u +%Y%m%d_%H%M%S_%N)" 
+    - name: Create version
+      run: echo "::set-env name=VERSION::$(date -u +%Y%m%d_%H%M%S_%N)" 
+    - name: Output version 
+      id: output_version
+      run: echo "::set-output name=version::$VERSION"
     - uses: actions/checkout@v2
     - name: Setup Node.js
       uses: actions/setup-node@v1
@@ -49,11 +51,16 @@ jobs:
     needs: [build, test]
     runs-on: ubuntu-latest
 
+    inputs:
+      version:
+        description: 'Build version'
+        required: true
+
     steps:
     - name: Download artifact
       uses: actions/download-artifact@v2
       with:
-        name: $VERSION
+        name: $INPUT_VERSION
         path: build-zip
 
     - name: Fetch Discord bot token
@@ -62,7 +69,7 @@ jobs:
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
     - name: Add Discord bit token
-      run: zip -ur build-zip/$VERSION.zip .env
+      run: zip -ur build-zip/$INPUT_VERSION.zip .env
     
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v10
@@ -71,7 +78,7 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_ACCESS_SECRET }}
         application_name: gerald-the-discord-bot
         environment_name: gerald-env
-        version_label: $VERSION
+        version_label: $INPUT_VERSION
         version_description: ${{github.SHA}}
         region: eu-north-1
-        deployment_package: build-zip/$VERSION.zip
+        deployment_package: build-zip/$INPUT_VERSION.zip
