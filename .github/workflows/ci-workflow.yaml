@@ -20,11 +20,6 @@ jobs:
     - run: npm ci
     - run: npm run build
 
-    # - name: Create version
-    #   run: echo "::set-env name=VERSION::$(date -u +%Y%m%d_%H%M%S_%N)"
-    #   run: echo "::set-output name=version::$VERSION"
-
-
     - run: mkdir build-zip
     - name: Generate deployment package
       run: zip -r build-zip/$VERSION.zip * -x src/\* build-zip/\*
@@ -34,10 +29,6 @@ jobs:
       with:
         name: build
         path: build-zip
-    
-    # outputs:
-    #   version:
-    #     description: 'The sum of the inputs'
 
   
   test:
@@ -52,38 +43,34 @@ jobs:
     - run: npm ci
     - run: npm test
 
-  # deploy:
-  #   needs: [build, test]
-  #   runs-on: ubuntu-latest
 
-  #   inputs:
-  #     version:
-  #       description: 'Build version'
-  #       required: true
+  deploy:
+    needs: [build, test]
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #   - name: Download artifact
-  #     uses: actions/download-artifact@v2
-  #     with:
-  #       name: $INPUT_VERSION
-  #       path: build-zip
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: $VERSION
+        path: build-zip
 
-  #   - name: Add Discord bot token
-  #     run: 'echo "DISCORD_BOT_TOKEN = $DISCORD_BOT_TOKEN" > .env'
-  #     shell: bash
-  #     env:
-  #       DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-  #     run: zip -ur build-zip/$INPUT_VERSION.zip .env
+    - name: Add Discord bot token
+      run: 'echo "DISCORD_BOT_TOKEN = $DISCORD_BOT_TOKEN" > .env'
+      shell: bash
+      env:
+        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+      run: zip -ur build-zip/$VERSION.zip .env
     
-  #   - name: Deploy to EB
-  #     uses: einaregilsson/beanstalk-deploy@v10
-  #     with:
-  #       aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-  #       aws_secret_key: ${{ secrets.AWS_ACCESS_SECRET }}
-  #       application_name: gerald-the-discord-bot
-  #       environment_name: gerald-env
-  #       version_label: $INPUT_VERSION
-  #       version_description: ${{github.SHA}}
-  #       region: eu-north-1
-  #       deployment_package: build-zip/build.zip
+    - name: Deploy to EB
+      uses: einaregilsson/beanstalk-deploy@v10
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+        aws_secret_key: ${{ secrets.AWS_ACCESS_SECRET }}
+        application_name: gerald-the-discord-bot
+        environment_name: gerald-env
+        version_label: $VERSION
+        version_description: ${{github.SHA}}
+        region: eu-north-1
+        deployment_package: build-zip/$VERSION.zip
     
