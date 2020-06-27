@@ -4,8 +4,7 @@ on:
   push:
     branches: [ master ]
 
-name: Create version
-  run: echo "::set-env name=VERSION::$(date -u +%Y%m%d_%H%M%S_%N)"
+echo "::set-env name=VERSION::$(date -u +%Y%m%d_%H%M%S_%N)"
 
 jobs:
   build:
