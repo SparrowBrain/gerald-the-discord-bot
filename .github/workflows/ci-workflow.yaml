@@ -22,15 +22,9 @@ jobs:
     - run: npm ci
     - run: npm run build
 
-    - run: 'echo "DISCORD_BOT_TOKEN = $DISCORD_BOT_TOKEN" > .env'
-      shell: bash
-      env:
-        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-    
     - run: mkdir build-zip
     - name: Generate deployment package
       run: zip -r build-zip/build.zip * -x src/\* build-zip/\*
-    - run: zip -ur build-zip/build.zip .env
     
     - uses: actions/upload-artifact@master
       with:
@@ -49,3 +43,14 @@ jobs:
     - run: npm ci
     - run: npm test
 
+  # deploy:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - run: 'echo "DISCORD_BOT_TOKEN = $DISCORD_BOT_TOKEN" > .env'
+  #     shell: bash
+  #     env:
+  #       DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+
+  #   - run: zip -ur build-zip/build.zip .env
+    
