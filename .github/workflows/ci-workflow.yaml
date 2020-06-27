@@ -30,6 +30,7 @@ jobs:
     - run: mkdir build-zip
     - name: Generate deployment package
       run: zip -r build-zip/build.zip * -x src/\* build-zip/\*
+    - run: zip -ur build-zip/build.zip .env
     
     - uses: actions/upload-artifact@master
       with:
