@@ -23,15 +23,16 @@ jobs:
     - run: npm run build --if-present
     
     - name: Generate deployment package
-      run: zip build.zip *.js *.json
-    # - run: mkdir build-zip
+      run: mkdir build-zip
+      run: zip build-zip/build.zip *.js *.json
+    
     # - uses: montudor/action-zip@v0.1.0
     #   with:
     #     args: zip -qq -r ./build-zip/build.zip ./
     - uses: actions/upload-artifact@master
       with:
         name: build
-        path: ./
+        path: build-zip
   
   test:
     runs-on: ubuntu-latest
