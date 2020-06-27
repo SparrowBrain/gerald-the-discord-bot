@@ -22,12 +22,10 @@ jobs:
     - run: npm ci
     - run: npm run build
 
-    - name: Create File
-      uses: finnp/create-file-action@1.0.0
-      env: 
-        FILE_NAME: ".env"
-        FILE_DATA: "DISCORD_BOT_TOKEN =  ${{ secrets.DISCORD_BOT_TOKEN }}"
-
+    - run: 'echo "$DISCORD_BOT_TOKEN" > .env'
+      shell: bash
+      env:
+        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
     
     - run: mkdir build-zip
     - name: Generate deployment package
