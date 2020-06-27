@@ -4,6 +4,9 @@ on:
   push:
     branches: [ master ]
 
+name: Create version
+  run: echo "::set-env name=VERSION::$(date -u +%Y%m%d_%H%M%S_%N)"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,15 +20,25 @@ jobs:
     - run: npm ci
     - run: npm run build
 
+    # - name: Create version
+    #   run: echo "::set-env name=VERSION::$(date -u +%Y%m%d_%H%M%S_%N)"
+    #   run: echo "::set-output name=version::$VERSION"
+
+
     - run: mkdir build-zip
     - name: Generate deployment package
-      run: zip -r build-zip/build.zip * -x src/\* build-zip/\*
+      run: zip -r build-zip/$VERSION.zip * -x src/\* build-zip/\*
     
     - name: Publish artifact
       uses: actions/upload-artifact@master
       with:
         name: build
         path: build-zip
+    
+    # outputs:
+    #   version:
+    #     description: 'The sum of the inputs'
+
   
   test:
     runs-on: ubuntu-latest
@@ -40,13 +53,37 @@ jobs:
     - run: npm test
 
   # deploy:
+  #   needs: [build, test]
   #   runs-on: ubuntu-latest
 
+  #   inputs:
+  #     version:
+  #       description: 'Build version'
+  #       required: true
+
   #   steps:
-  #   - run: 'echo "DISCORD_BOT_TOKEN = $DISCORD_BOT_TOKEN" > .env'
+  #   - name: Download artifact
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: $INPUT_VERSION
+  #       path: build-zip
+
+  #   - name: Add Discord bot token
+  #     run: 'echo "DISCORD_BOT_TOKEN = $DISCORD_BOT_TOKEN" > .env'
   #     shell: bash
   #     env:
   #       DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-
-  #   - run: zip -ur build-zip/build.zip .env
+  #     run: zip -ur build-zip/$INPUT_VERSION.zip .env
+    
+  #   - name: Deploy to EB
+  #     uses: einaregilsson/beanstalk-deploy@v10
+  #     with:
+  #       aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+  #       aws_secret_key: ${{ secrets.AWS_ACCESS_SECRET }}
+  #       application_name: gerald-the-discord-bot
+  #       environment_name: gerald-env
+  #       version_label: $INPUT_VERSION
+  #       version_description: ${{github.SHA}}
+  #       region: eu-north-1
+  #       deployment_package: build-zip/build.zip
     
