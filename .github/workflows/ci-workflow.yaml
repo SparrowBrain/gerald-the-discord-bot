@@ -1,12 +1,7 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: Node.js CI
+name: Continuous Integration
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
     branches: [ master ]
 
 jobs:
@@ -15,7 +10,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js
+    - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
         node-version: '12.x'
@@ -26,7 +21,8 @@ jobs:
     - name: Generate deployment package
       run: zip -r build-zip/build.zip * -x src/\* build-zip/\*
     
-    - uses: actions/upload-artifact@master
+    - name: Publish artifact
+      uses: actions/upload-artifact@master
       with:
         name: build
         path: build-zip
@@ -36,7 +32,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js
+    - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
         node-version: '12.x'
