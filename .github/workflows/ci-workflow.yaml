@@ -5,7 +5,8 @@ on:
     branches: [ master ]
 
 env:
-  VERSION: $(date -u +%Y%m%d_%H%M%S_%N)
+  VERSION:
+   - run: echo date -u +%Y%m%d_%H%M%S_%N
 
 jobs:
   build:
@@ -74,4 +75,3 @@ jobs:
         version_description: ${{github.SHA}}
         region: eu-north-1
         deployment_package: build-zip/$VERSION.zip
-        
