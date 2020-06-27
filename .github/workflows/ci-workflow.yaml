@@ -11,7 +11,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -22,13 +21,27 @@ jobs:
         node-version: '12.x'
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
     
-    - run: mkdir build-zip
-    - uses: montudor/action-zip@v0.1.0
-      with:
-        args: zip -qq -r ./build-zip/build.zip ./
+    - name: Generate deployment package
+      run: zip build.zip *.js *.json
+    # - run: mkdir build-zip
+    # - uses: montudor/action-zip@v0.1.0
+    #   with:
+    #     args: zip -qq -r ./build-zip/build.zip ./
     - uses: actions/upload-artifact@master
       with:
         name: build
-        path: build-zip
+        path: ./
+  
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm ci
+    - run: npm test
+
