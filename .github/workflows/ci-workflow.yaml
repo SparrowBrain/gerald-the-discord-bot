@@ -4,13 +4,14 @@ on:
   push:
     branches: [ master ]
 
-echo "::set-env name=VERSION::$(date -u +%Y%m%d_%H%M%S_%N)"
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Create version
+      run: echo "::set-env name=VERSION::$(date -u +%Y%m%d_%H%M%S_%N)" 
     - uses: actions/checkout@v2
     - name: Setup Node.js
       uses: actions/setup-node@v1
