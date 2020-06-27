@@ -67,7 +67,7 @@ jobs:
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
     - name: Add Discord bit token
-      run: zip -ur build-zip/$VERSION.zip .env
+      run: echo 'zip -ur build-zip/$VERSION.zip .env'
     
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v10
@@ -76,7 +76,7 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_ACCESS_SECRET }}
         application_name: gerald-the-discord-bot
         environment_name: gerald-env
-        version_label: $VERSION
+        version_label: echo $VERSION
         version_description: ${{github.SHA}}
         region: eu-north-1
-        deployment_package: build-zip/$VERSION.zip
+        deployment_package: echo 'build-zip/$VERSION.zip'
