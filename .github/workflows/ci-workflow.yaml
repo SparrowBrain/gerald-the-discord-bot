@@ -4,14 +4,16 @@ on:
   push:
     branches: [ master ]
 
+env:
+  VERSION: $(date -u +%Y%m%d_%H%M%S_%N)
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Create version
-      run: echo "::set-env name=VERSION::$(date -u +%Y%m%d_%H%M%S_%N)" 
+    # - name: Create version
+    #   run: echo "::set-env name=VERSION::$(date -u +%Y%m%d_%H%M%S_%N)" 
     - uses: actions/checkout@v2
     - name: Setup Node.js
       uses: actions/setup-node@v1
@@ -30,7 +32,6 @@ jobs:
         name: build
         path: build-zip
 
-  
   test:
     runs-on: ubuntu-latest
 
@@ -42,9 +43,6 @@ jobs:
         node-version: '12.x'
     - run: npm ci
     - run: npm test
-    
-    - run: 'echo $VERSION'
-
 
   deploy:
     needs: [build, test]
@@ -76,4 +74,4 @@ jobs:
         version_description: ${{github.SHA}}
         region: eu-north-1
         deployment_package: build-zip/$VERSION.zip
-    
+        
