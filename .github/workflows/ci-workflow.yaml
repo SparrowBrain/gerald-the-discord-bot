@@ -24,7 +24,7 @@ jobs:
     
     - run: mkdir build-zip
     - name: Generate deployment package
-      run: zip -r build-zip/build.zip * --exclude=src --exclude=build-zip
+      run: zip -r build-zip/build.zip * --x src/\* build-zip/\*
     
     # - uses: montudor/action-zip@v0.1.0
     #   with:
