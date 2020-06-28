@@ -52,9 +52,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set version
-      run: echo "::set-env name=VERSION::${{needs.build.outputs.version}}" 
-
     - name: Download artifact
       uses: actions/download-artifact@v2
       with:
@@ -67,7 +64,7 @@ jobs:
       env:
         DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
     - name: Add Discord bit token
-      run: echo 'zip -ur build-zip/$VERSION.zip .env'
+      run: echo 'zip -ur build-zip/${{needs.build.outputs.version}}.zip .env'
     
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v10
@@ -75,7 +72,7 @@ jobs:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
         aws_secret_key: ${{ secrets.AWS_ACCESS_SECRET }}
         application_name: gerald-the-discord-bot
-        environment_name: gerald-env
+        environment_name: GeraldTheDiscordBot-env
         version_label: ${{needs.build.outputs.version}}
         version_description: ${{github.SHA}}
         region: eu-north-1
