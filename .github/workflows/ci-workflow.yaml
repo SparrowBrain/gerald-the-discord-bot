@@ -72,7 +72,7 @@ jobs:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
         aws_secret_key: ${{ secrets.AWS_ACCESS_SECRET }}
         application_name: gerald-the-discord-bot
-        environment_name: GeraldTheDiscordBot-env
+        environment_name: gerald-the-discord-bot-env
         version_label: ${{needs.build.outputs.version}}
         version_description: ${{github.SHA}}
         region: eu-north-1
