@@ -57,14 +57,6 @@ jobs:
       with:
         name: build
         path: build-zip
-
-    - name: Fetch Discord bot token
-      run: 'echo "DISCORD_BOT_TOKEN = $DISCORD_BOT_TOKEN" > .env'
-      shell: bash
-      env:
-        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-    - name: Add Discord bit token
-      run: echo 'zip -ur build-zip/${{needs.build.outputs.version}}.zip .env'
     
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v10
