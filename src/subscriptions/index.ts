@@ -1,5 +1,5 @@
 import { SubscriptionManager } from "./SubscriptionManager";
-import { saveToFile, loadFromFile } from "./persistance";
+import { saveToFile, loadFromFile } from "./persistance/file";
 import { Client } from "discord.js";
 import { fetchChannels } from "./fetchChannels";
 
