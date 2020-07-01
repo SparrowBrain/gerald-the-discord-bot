@@ -33,35 +33,52 @@ describe('save', () => {
 
         expect(saveToS3Spy).toBeCalledWith(ids);
     });
+
+    it('should throw error when invalid provider is configured', () => {
+        jest.doMock('../../config', () => { return { SubsProvider: "NON EXISTANT PROVIDER" } });
+        const persistance = require('./persistance');
+        const ids = ['abc', '123'];
+
+        expect(() => {
+            persistance.save(ids);
+        }).toThrowError('Invalid subscriptions provider configuraiton');
+    });
 });
 
 describe('load', () => {
 
     const loadFromFileSpy = jest.spyOn(file, 'loadFromFile').mockImplementation(() => ['file', 'ids']);
-    const loadFromS3Spy = jest.spyOn(s3, 'loadFromS3').mockImplementation(() => ['s3', 'ids']);
+    const loadFromS3Spy = jest.spyOn(s3, 'loadFromS3').mockImplementation(async () => ['s3', 'ids']);
 
     afterEach(() => {
         jest.resetModules();
         jest.clearAllMocks();
     });
 
-    it('should load from file when file provider is configured', () => {
+    it('should load from file when file provider is configured', async () => {
         jest.doMock('../../config', () => { return { SubsProvider: SubscriptionsProvider.File } });
         jest.doMock('./file', () => { return { loadFromFile: loadFromFileSpy } });
         const persistance = require('./persistance');
 
-        const ids = persistance.load();
+        const ids = await persistance.load();
 
         expect(ids).toEqual(['file', 'ids']);
     });
 
-    it('should save to s3 when s3 provider is configured', () => {
+    it('should load from s3 when s3 provider is configured', async () => {
         jest.doMock('../../config', () => { return { SubsProvider: SubscriptionsProvider.S3 } });
         jest.doMock('./s3', () => { return { loadFromS3: loadFromS3Spy } });
         const persistance = require('./persistance');
 
-        const ids = persistance.load();
+        const ids = await persistance.load();
 
         expect(ids).toEqual(['s3', 'ids']);
+    });
+
+    it('should throw error when invalid provider is configured', async () => {
+        jest.doMock('../../config', () => { return { SubsProvider: "NON EXISTANT PROVIDER" } });
+        const persistance = require('./persistance');
+
+        expect(persistance.load()).rejects.toThrowError('Invalid subscriptions provider configuraiton');
     });
 });

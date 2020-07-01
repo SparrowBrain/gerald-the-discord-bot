@@ -7,7 +7,7 @@ import { load, save } from "./persistance/persistance";
 
 
 export const initSubscrptionManager = async (client: Client): Promise<SubscriptionManager> => {
-    const ids = load();
+    const ids = await load();
     console.log('loaded channel ids: ' + ids)
     const channels = await fetchChannels(client, ids)
     const subscriptionManager = new SubscriptionManager(channels);
