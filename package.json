@@ -29,7 +29,7 @@
   "homepage": "https://github.com/SparrowBrain/gerald-the-discord-bot#readme",
   "devDependencies": {
     "@types/cheerio": "0.22.18",
-    "@types/jest": "26.0.8",
+    "@types/jest": "26.0.10",
     "@types/node": "13.13.15",
     "@types/source-map-support": "0.5.1",
     "@types/ws": "7.2.6",
