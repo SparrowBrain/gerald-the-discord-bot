@@ -45,7 +45,7 @@
     "onchange": "7.0.2",
     "serve": "11.3.2",
     "source-map-support": "0.5.19",
-    "ts-jest": "26.4.0",
+    "ts-jest": "26.4.1",
     "ts-node-dev": "1.0.0-pre.50",
     "tsc-watch": "4.2.9",
     "typescript": "3.9.7"
