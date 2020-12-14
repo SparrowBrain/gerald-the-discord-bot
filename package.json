@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/cheerio": "0.22.18",
     "@types/jest": "26.0.18",
-    "@types/node": "13.13.35",
+    "@types/node": "13.13.36",
     "@types/source-map-support": "0.5.1",
     "@types/ws": "7.4.0",
     "@typescript-eslint/eslint-plugin": "2.31.0",
