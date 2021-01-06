@@ -40,6 +40,11 @@ export class SubscriptionManager extends EventEmitter {
         }
     }
 
+    public tellSubsNumber(channel: TextChannel | DMChannel | NewsChannel) {
+        let subsCount = this.subscriptions.size;
+        channel.send('Currently I have ' + subsCount + ' subscribers.');
+    }
+
     private addSubscription(channel: DMChannel | TextChannel | NewsChannel) {
         const sendToChannel = (link: string): void => {
             channel.send(link);

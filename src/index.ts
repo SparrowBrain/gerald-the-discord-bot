@@ -2,6 +2,7 @@ import Discord from 'discord.js';
 import { Token, FetchIntervalMs } from './config';
 import isStartMessage from './messageFilters/isStartMessage';
 import isStopMessage from './messageFilters/isStopMessage';
+import isSubsMessage from './messageFilters/isSubsMessage';
 import ggScraper from './ggScraper';
 import memory from './memory';
 import { initSubscrptionManager } from './subscriptions';
@@ -39,6 +40,10 @@ client.on('message', message => {
 
         if (isStopMessage({ content: message.content })) {
             subscriptionManager.unsubscribe(message.channel);
+        }
+
+        if (isSubsMessage({ content: message.content })) {
+            subscriptionManager.tellSubsNumber(message.channel);
         }
     }
 
