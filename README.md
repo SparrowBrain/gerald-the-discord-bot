@@ -5,7 +5,7 @@
 A discord bot that announces computer game giveaways on a text channel.
 
 ## Add bot to your server ##
-To add bot to your server, send this invite link:
+To add bot to your server, open this invite link:
 
 `https://discord.com/oauth2/authorize?client_id=708639354574340177&scope=bot`
 
