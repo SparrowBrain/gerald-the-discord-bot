@@ -1,5 +1,6 @@
 import Discord from 'discord.js';
 import { Token, FetchIntervalMs } from './config';
+import isHelpMessage from './messageFilters/isHelpMessage';
 import isStartMessage from './messageFilters/isStartMessage';
 import isStopMessage from './messageFilters/isStopMessage';
 import isSubsMessage from './messageFilters/isSubsMessage';
@@ -19,7 +20,9 @@ client.once('ready', async () => {
 
     memory.on('new-link-found', (link) => {
         subscriptionManager.broadcastMessage(link);
-    })
+    });
+
+    client.user?.setPresence({ activity: { name: '@me help', type: 'LISTENING' } })
 });
 
 client.login(Token);
@@ -33,6 +36,10 @@ setInterval(() => ggScraper.fetchFreebies(), FetchIntervalMs);
 client.on('message', message => {
     if (message.mentions.users.first()?.id === geraldId) {
         console.log(message.toJSON());
+
+        if (isHelpMessage({ content: message.content })) {
+            message.channel.send('@me start - subscribe to receive updates about free games\n@me stop - to stop receiving messages from me\n');
+        }
 
         if (isStartMessage({ content: message.content })) {
             subscriptionManager.subscribe(message.channel);
@@ -48,5 +55,3 @@ client.on('message', message => {
     }
 
 });
-
-
