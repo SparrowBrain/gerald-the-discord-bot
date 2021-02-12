@@ -51,7 +51,7 @@
     "typescript": "3.9.7"
   },
   "dependencies": {
-    "aws-sdk": "2.841.0",
+    "aws-sdk": "2.842.0",
     "cheerio": "1.0.0-rc.3",
     "discord.js": "12.5.1",
     "dotenv": "8.2.0"
