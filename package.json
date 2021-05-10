@@ -54,6 +54,6 @@
     "aws-sdk": "2.901.0",
     "cheerio": "1.0.0-rc.3",
     "discord.js": "12.5.3",
-    "dotenv": "8.5.1"
+    "dotenv": "9.0.1"
   }
 }
