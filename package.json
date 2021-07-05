@@ -45,10 +45,10 @@
     "onchange": "7.1.0",
     "serve": "11.3.2",
     "source-map-support": "0.5.19",
+    "typescript": "3.9.7",
     "ts-jest": "26.5.6",
-    "ts-node-dev": "1.1.6",
-    "tsc-watch": "4.4.0",
-    "typescript": "3.9.7"
+    "ts-node-dev": "^1.1.8",
+    "tsc-watch": "4.4.0"
   },
   "dependencies": {
     "aws-sdk": "2.922.0",
