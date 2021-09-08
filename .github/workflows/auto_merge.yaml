@@ -1,0 +1,14 @@
+name: Auto-merge
+on:
+  schedule:
+    - cron: "0 12 * * *"
+jobs:
+  test:
+    name: Auto-merge
+    runs-on: ubuntu-latest
+    steps:
+      - uses: koj-co/dependabot-pr-action@v1.1.12
+        with:
+          token: ${{ secrets.AUTO_MERGE_TOKEN }}
+          merge-minor: true
+          merge-patch: true
