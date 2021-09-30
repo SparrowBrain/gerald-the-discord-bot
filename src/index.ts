@@ -25,8 +25,6 @@ client.once('ready', async () => {
     client.user?.setPresence({ activity: { name: '@me help', type: 'LISTENING' } })
 });
 
-client.login(Token);
-
 ggScraper.on('freebies-fetched', (urls: string[]): void => {
     memory.memorizeLinks(urls);
 });
@@ -55,3 +53,5 @@ client.on('message', message => {
     }
 
 });
+
+client.login(Token);
