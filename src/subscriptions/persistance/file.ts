@@ -1,14 +1,13 @@
 import fs from 'fs'
-import { SubsFile } from '../../config';
 
-export const saveToFile = (channelIds: string[]): void => {
-    fs.writeFileSync(SubsFile, channelIds, 'utf-8');
+export const saveToFile = (channelIds: string[], file: string): void => {
+  fs.writeFileSync(file, channelIds, 'utf-8')
 }
 
-export const loadFromFile = (): string[] => {
-    if (!fs.existsSync(SubsFile)) {
-        return [];
-    }
+export const loadFromFile = (file: string): string[] => {
+  if (!fs.existsSync(file)) {
+    return []
+  }
 
-    return fs.readFileSync(SubsFile, 'utf-8').split(',');
+  return fs.readFileSync(file, 'utf-8').split(',')
 }
