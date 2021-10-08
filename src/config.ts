@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { SubscriptionsProvider } from './subscriptions/provider'
+import { SubscriptionsProvider } from './shared/subscriptions/provider'
 
 dotenv.config()
 
