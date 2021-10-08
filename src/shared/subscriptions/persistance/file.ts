@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import fs from 'fs'
 
 export const saveToFile = (channelIds: string[], file: string): void => {
