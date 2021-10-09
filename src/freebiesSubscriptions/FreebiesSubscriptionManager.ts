@@ -46,7 +46,7 @@ export class FreebiesSubscriptionManager extends EventEmitter {
 
   public tellSubsNumber (channel: TextChannel | DMChannel | NewsChannel) {
     const subsCount = this.subscriptions.size
-    channel.send('Currently I have ' + subsCount + 'freebies subscribers.')
+    channel.send('Currently I have ' + subsCount + ' freebies subscribers.')
   }
 
   private addSubscription (channel: DMChannel | TextChannel | NewsChannel) {
