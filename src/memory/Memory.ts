@@ -16,12 +16,12 @@ export class Memory extends EventEmitter {
 
         if (newLinks.length > maxNewLinks) {
             debugSubsciptionsManager.broadcastMessage(`New links exceed maximum new link count (${maxNewLinks}). Total memory size is ${links.length}. Something might be wrong. Supressing new-link-found events.`);
-            newLinks.forEach(link => {
+            newLinks.forEach((link: string) => {
                 debugSubsciptionsManager.broadcastMessage(`Supressed link: ${link}`);
             });
         }
 
-        newLinks.forEach(link => {
+        newLinks.forEach((link: string) => {
             console.log("new link found: " + link);
             this.emit('new-link-found', link);
         });
