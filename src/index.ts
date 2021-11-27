@@ -28,25 +28,25 @@ client.once('ready', async () => {
   client.user?.setPresence({
     activity: { name: '@me help', type: 'LISTENING' }
   })
-})
 
-ggScraper.on('freebies-fetched', (urls: string[]): void => {
-  if (urls.length === 0) {
-    debugSubscriptionManager.broadcastMessage('Empty list fetched for freebies');
-    return;
-  }
+  ggScraper.on('freebies-fetched', (urls: string[]): void => {
+    if (urls.length === 0) {
+      debugSubscriptionManager.broadcastMessage('Empty list fetched for freebies');
+      return;
+    }
 
-  memory.memorizeLinks(urls, debugSubscriptionManager)
+    memory.memorizeLinks(urls, debugSubscriptionManager, isFirstFetch);
 
-  if (isFirstFetch) {
-    memory.on('new-link-found', (link) => {
-      freebiesSubscriptionManager.broadcastMessage(link);
-    });
-    isFirstFetch = false;
-  }
+    if (isFirstFetch) {
+      memory.on('new-link-found', (link) => {
+        freebiesSubscriptionManager.broadcastMessage(link);
+      });
+      isFirstFetch = false;
+    }
+  });
+  ggScraper.fetchFreebies()
+  setInterval(() => ggScraper.fetchFreebies(), FetchIntervalMs)
 });
-ggScraper.fetchFreebies()
-setInterval(() => ggScraper.fetchFreebies(), FetchIntervalMs)
 
 client.on('message', (message) => {
   if (message.mentions.users.first()?.id === geraldId) {
@@ -78,6 +78,6 @@ client.on('message', (message) => {
       debugSubscriptionManager.unsubscribe(message.channel)
     }
   }
-})
+});
 
-client.login(Token)
+client.login(Token);
