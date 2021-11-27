@@ -17,16 +17,13 @@ const client = new Discord.Client()
 let geraldId: string | undefined
 let freebiesSubscriptionManager: FreebiesSubscriptionManager
 let debugSubscriptionManager: DebugSubscriptionManager
+let isFirstFetch = true;
 
 client.once('ready', async () => {
   console.log('Ready!')
   geraldId = client.user?.id
   freebiesSubscriptionManager = await initFreebiesSubscrptionManager(client)
   debugSubscriptionManager = await initDebugSubscrptionManager(client)
-
-  memory.on('new-link-found', (link) => {
-    freebiesSubscriptionManager.broadcastMessage(link)
-  })
 
   client.user?.setPresence({
     activity: { name: '@me help', type: 'LISTENING' }
@@ -35,11 +32,19 @@ client.once('ready', async () => {
 
 ggScraper.on('freebies-fetched', (urls: string[]): void => {
   if (urls.length === 0) {
-    debugSubscriptionManager.broadcastMessage('Empty list fetched for freebies')
+    debugSubscriptionManager.broadcastMessage('Empty list fetched for freebies');
+    return;
   }
 
-  memory.memorizeLinks(urls)
-})
+  memory.memorizeLinks(urls, debugSubscriptionManager)
+
+  if (isFirstFetch) {
+    memory.on('new-link-found', (link) => {
+      freebiesSubscriptionManager.broadcastMessage(link);
+    });
+    isFirstFetch = false;
+  }
+});
 ggScraper.fetchFreebies()
 setInterval(() => ggScraper.fetchFreebies(), FetchIntervalMs)
 
