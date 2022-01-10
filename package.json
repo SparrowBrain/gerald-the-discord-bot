@@ -8,8 +8,9 @@
     "start:dev": "ts-node-dev ./src/index.ts",
     "build": "tsc",
     "build:watch": "onchange \"src/**/*.ts\" -- npm run build",
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watchAll",
+    "test": "jest",
+    "test:acceptance": "jest --testPathPattern=tests/acceptance",
+    "test:unit": "jest --watchAll --testPathPattern=src",
     "view:coverage": "serve coverage/lcov-report",
     "clean": "rm -rf coverage src/**/*.js src/**/*.map"
   },
@@ -28,6 +29,8 @@
   },
   "homepage": "https://github.com/SparrowBrain/gerald-the-discord-bot#readme",
   "devDependencies": {
+    "@plant/http": "^1.0.4",
+    "@plant/plant": "^2.5.0",
     "@types/cheerio": "^0.22.18",
     "@types/jest": "^26.0.23",
     "@types/node": "^13.13.50",
