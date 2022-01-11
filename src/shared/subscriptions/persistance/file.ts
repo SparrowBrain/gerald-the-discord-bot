@@ -1,14 +1,13 @@
-/* istanbul ignore file */
-import fs from 'fs'
+import fs from 'fs';
 
 export const saveToFile = (channelIds: string[], file: string): void => {
-  fs.writeFileSync(file, channelIds, 'utf-8')
-}
+  fs.writeFileSync(file, channelIds.join(','), 'utf-8');
+};
 
 export const loadFromFile = (file: string): string[] => {
   if (!fs.existsSync(file)) {
-    return []
+    return [];
   }
 
-  return fs.readFileSync(file, 'utf-8').split(',')
-}
+  return fs.readFileSync(file, 'utf-8').split(',');
+};
