@@ -3,10 +3,12 @@
  */
 
 import Discord, { TextChannel } from 'discord.js';
-import { TestChannelId, Token } from '../../src/config';
+import { ScrapeUrl, TestChannelId, Token } from '../../src/config';
+import { GameFlood, InitPage, LivePage, NewGameOnSteam, NonSubscriberGame } from './constants';
 const fs = require('fs');
 
 let geraldId:string|undefined;
+let channel: TextChannel;
 const client = new Discord.Client();
 const messages:Discord.Message[] = [];
 
@@ -15,6 +17,7 @@ describe('freebies', () => {
     jest.setTimeout(30000);
     client.once('ready', async () => {
       geraldId = client.user?.id;
+      channel = await client.channels.fetch(TestChannelId) as TextChannel;
     });
 
     client.on('message', (message) => {
@@ -31,10 +34,15 @@ describe('freebies', () => {
     }
   });
 
+  beforeEach(async () => {
+    channel.send(`<@!${geraldId}> stop`);
+    resetPage();
+    await delay(5000);
+    while (messages.pop() !== undefined);
+  });
+
   it('subscription messages should work', async () => {
     jest.setTimeout(30000);
-
-    const channel = await client.channels.fetch(TestChannelId) as TextChannel;
 
     channel.send(`<@!${geraldId}> start`);
     await delay(5000);
@@ -55,8 +63,48 @@ describe('freebies', () => {
     await delay(5000);
     message = messages.shift();
     expect(message!.content).toBe("I'm not doing anythin'...");
+  });
 
-    fs.copyFileSync('./tests/acceptance/pages/b.html', './tests/acceptance/pages/live.html');
+  it('should show one new game for subscribers', async () => {
+    jest.setTimeout(30000);
+
+    channel.send(`<@!${geraldId}> start`);
+    await delay(5000);
+    messages.shift();
+
+    setPage(NewGameOnSteam);
+
+    await delay(5000);
+    const message = messages.shift();
+    expect(message!.content).toBe(ScrapeUrl + '/freebie/free-new-game-on-steam/');
+  });
+
+  it('should not show a new game for non-subscribers', async () => {
+    jest.setTimeout(30000);
+
+    channel.send(`<@!${geraldId}> stop`);
+    await delay(5000);
+    messages.shift();
+
+    setPage(NonSubscriberGame);
+
+    await delay(5000);
+    const message = messages.shift();
+    expect(message).toBeUndefined();
+  });
+
+  it('should not show new games if there are more than 10', async () => {
+    jest.setTimeout(30000);
+
+    channel.send(`<@!${geraldId}> start`);
+    await delay(5000);
+    messages.shift();
+
+    setPage(GameFlood);
+
+    await delay(5000);
+    const message = messages.shift();
+    expect(message).toBeUndefined();
   });
 
   afterAll(() => {
@@ -64,30 +112,14 @@ describe('freebies', () => {
   });
 });
 
-// {
-//   channelID: '930242099717242880',
-//   deleted: false,
-//   id: '930248798452736050',
-//   type: 'DEFAULT',
-//   system: false,
-//   content: '<@!885633874107985960> start',
-//   authorID: '330738958331936778',
-//   pinned: false,
-//   tts: false,
-//   nonce: '930248798431608832',
-//   embeds: [],
-//   attachments: [],
-//   createdTimestamp: 1641858996738,
-//   editedTimestamp: 0,
-//   webhookID: null,
-//   applicationID: null,
-//   activity: null,
-//   flags: 0,
-//   reference: null,
-//   guildID: null,
-//   cleanContent: '@gerald-test-bot start'
-// }
-
 function delay (ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+const setPage = (path:string) => {
+  fs.copyFileSync(path, LivePage);
+};
+
+const resetPage = () => {
+  setPage(InitPage);
+};

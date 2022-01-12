@@ -20,6 +20,7 @@ export class Memory extends EventEmitter {
         newLinks.forEach((link: string) => {
           debugSubsciptionsManager.broadcastMessage(`Supressed link: ${link}`);
         });
+        return;
       }
 
       newLinks.forEach((link: string) => {

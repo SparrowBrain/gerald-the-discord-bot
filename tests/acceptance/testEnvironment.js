@@ -18,7 +18,6 @@ class TestEnvironment extends NodeEnvironment {
     plant.use('/news/freebies', async function ({ res }) {
       try {
         const data = fs.readFileSync('./tests/acceptance/pages/_live.html', 'utf8');
-        console.log(data);
         res.html(data);
       } catch (err) {
         console.error(err);
@@ -29,8 +28,6 @@ class TestEnvironment extends NodeEnvironment {
     // Build request handler
     server = createServer(plant)
       .listen(8090);
-
-    console.log(server);
   }
 
   async teardown () {
