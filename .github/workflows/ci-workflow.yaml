@@ -3,7 +3,7 @@ concurrency: ci
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
@@ -13,60 +13,67 @@ jobs:
       version: ${{ steps.output_version.outputs.version }}
 
     steps:
-    - name: Create version
-      run: echo "VERSION=$(date -u +%Y%m%d_%H%M%S_%N)" >> $GITHUB_ENV
-    - name: Output version 
-      id: output_version
-      run: echo "::set-output name=version::$VERSION"
-    - uses: actions/checkout@v2
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: npm ci
-    - run: npm run build
+      - name: Create version
+        run: echo "VERSION=$(date -u +%Y%m%d_%H%M%S_%N)" >> $GITHUB_ENV
+      - name: Output version
+        id: output_version
+        run: echo "::set-output name=version::$VERSION"
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: npm ci
+      - run: npm run build
 
-    - run: mkdir build-zip
-    - name: Generate deployment package
-      run: zip -r build-zip/$VERSION.zip * -x src/\* build-zip/\*
-    
-    - name: Publish artifact
-      uses: actions/upload-artifact@master
-      with:
-        name: build
-        path: build-zip
+      - run: mkdir build-zip
+      - name: Generate deployment package
+        run: zip -r build-zip/$VERSION.zip * -x src/\* build-zip/\*
+
+      - name: Publish artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: build
+          path: build-zip
 
   test:
+    needs: [build]
     runs-on: ubuntu-latest
+    concurrency: discord_api
+    env:
+      DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+      TEST_CHANNEL_ID: ${{ secrets.TEST_CHANNEL_ID }}
+      SCRAPE_URL: http://localhost:8090
+      FETCH_INTERVAL: 1000
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: npm ci
-    - run: npm test
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: npm start & npx wait-on http://localhost:80/health
+      - run: npm test
 
   deploy:
     needs: [build, test]
     runs-on: ubuntu-latest
 
     steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: build
-        path: build-zip
-    
-    - name: Deploy to EB
-      uses: einaregilsson/beanstalk-deploy@v10
-      with:
-        aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-        aws_secret_key: ${{ secrets.AWS_ACCESS_SECRET }}
-        application_name: gerald-the-discord-bot
-        environment_name: gerald-the-discord-bot-env
-        version_label: ${{needs.build.outputs.version}}
-        version_description: ${{github.SHA}}
-        region: eu-north-1
-        deployment_package: build-zip/${{needs.build.outputs.version}}.zip
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: build-zip
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v10
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_ACCESS_SECRET }}
+          application_name: gerald-the-discord-bot
+          environment_name: gerald-the-discord-bot-env
+          version_label: ${{needs.build.outputs.version}}
+          version_description: ${{github.SHA}}
+          region: eu-north-1
+          deployment_package: build-zip/${{needs.build.outputs.version}}.zip

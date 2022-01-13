@@ -2,19 +2,26 @@ name: Pull Request
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [master]
+
+concurrency: discord_api
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+      TEST_CHANNEL_ID: ${{ secrets.TEST_CHANNEL_ID }}
+      SCRAPE_URL: http://localhost:8090
+      FETCH_INTERVAL: 1000
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: npm ci
-    - run: npm test    
-    - run: npm run build
-    
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: npm ci
+      - run: npm run build
+      - run: npm start & npx wait-on http://localhost:80/health
+      - run: npm test

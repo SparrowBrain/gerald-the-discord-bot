@@ -29,7 +29,7 @@ describe('freebies', () => {
     client.login(Token);
 
     // eslint-disable-next-line no-unmodified-loop-condition
-    while (geraldId === undefined) {
+    while (geraldId === undefined || channel === undefined) {
       await delay(1000);
     }
   });

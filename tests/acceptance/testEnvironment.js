@@ -21,7 +21,7 @@ class TestEnvironment extends NodeEnvironment {
         res.html(data);
       } catch (err) {
         console.error(err);
-        res.body(err);
+        res.body = err;
       }
     });
 

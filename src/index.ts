@@ -12,6 +12,7 @@ import { initDebugSubscrptionManager } from './debugSubsciptionsManager';
 import { initFreebiesSubscrptionManager } from './freebiesSubscriptions';
 import isDebugOnMessage from './messageFilters/isDebugOnMessage';
 import isDebugOffMessage from './messageFilters/isDebugOffMessage';
+import health from './health';
 
 const client = new Discord.Client();
 let geraldId: string | undefined;
@@ -46,6 +47,9 @@ client.once('ready', async () => {
   });
   ggScraper.fetchFreebies();
   setInterval(() => ggScraper.fetchFreebies(), FetchIntervalMs);
+
+  await health();
+  console.log('Healthy!');
 });
 
 client.on('message', (message) => {
