@@ -10,8 +10,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      DISCORD_BOT_TOKEN: "${{ secrets.DISCORD_BOT_TOKEN }}""
-      TEST_CHANNEL_ID: "${{ secrets.TEST_CHANNEL_ID }}""
+      DISCORD_BOT_TOKEN: "${{ secrets.DISCORD_BOT_TOKEN }}"
+      TEST_CHANNEL_ID: "${{ secrets.TEST_CHANNEL_ID }}"
       SCRAPE_URL: http://localhost:8090
       FETCH_INTERVAL: 1000
       HEALTH_ENDPOINT_PORT: 3050
