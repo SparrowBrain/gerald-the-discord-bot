@@ -26,6 +26,9 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - run: npm start & npx wait-on -t 60000 http://localhost:${{ env.HEALTH_ENDPOINT_PORT }}/health
+      - run: npm test
+
       - run: mkdir build-zip
       - name: Generate deployment package
         run: zip -r build-zip/$VERSION.zip * -x src/\* build-zip/\*
@@ -36,28 +39,8 @@ jobs:
           name: build
           path: build-zip
 
-  test:
-    needs: [build]
-    runs-on: ubuntu-latest
-    concurrency: discord_api
-    env:
-      DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-      TEST_CHANNEL_ID: "${{ secrets.TEST_CHANNEL_ID }}"
-      SCRAPE_URL: http://localhost:8090
-      FETCH_INTERVAL: 1000
-      HEALTH_ENDPOINT_PORT: 3050
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: "12.x"
-      - run: npm start & npx wait-on -t 60000 http://localhost:${{ env.HEALTH_ENDPOINT_PORT }}/health
-      - run: npm test
-
   deploy:
-    needs: [build, test]
+    needs: [build]
     runs-on: ubuntu-latest
 
     steps:
