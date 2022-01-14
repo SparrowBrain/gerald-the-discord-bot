@@ -4,11 +4,10 @@ on:
   pull_request:
     branches: [master]
 
-concurrency: discord_api
-
 jobs:
   test:
     runs-on: ubuntu-latest
+    concurrency: discord_api
     env:
       DISCORD_BOT_TOKEN: "${{ secrets.DISCORD_BOT_TOKEN }}"
       TEST_CHANNEL_ID: "${{ secrets.TEST_CHANNEL_ID }}"
