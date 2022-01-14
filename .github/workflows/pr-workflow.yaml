@@ -14,6 +14,7 @@ jobs:
       TEST_CHANNEL_ID: ${{ secrets.TEST_CHANNEL_ID }}
       SCRAPE_URL: http://localhost:8090
       FETCH_INTERVAL: 1000
+      HEALTH_ENDPOINT_PORT: 3050
 
     steps:
       - uses: actions/checkout@v2
@@ -23,5 +24,5 @@ jobs:
           node-version: "12.x"
       - run: npm ci
       - run: npm run build
-      - run: npm start & npx wait-on http://localhost:80/health
+      - run: npm start & npx wait-on http://localhost:$HEALTH_ENDPOINT_PORT/health
       - run: npm test

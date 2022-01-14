@@ -15,5 +15,7 @@ export const AwsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 export const ScrapeUrl:string = process.env.SCRAPE_URL ?? 'https://gg.deals';
 export const FetchIntervalMs: number = process.env.FETCH_INTERVAL ? parseInt(process.env.FETCH_INTERVAL) : 1000 * 60 * 60;
 
+export const HealthEndpointPort: number = process.env.HEALTH_ENDPOINT_PORT ? parseInt(process.env.HEALTH_ENDPOINT_PORT) : 3050;
+
 // Acceptance test variables
 export const TestChannelId = process.env.TEST_CHANNEL_ID || 'UNFILLED';

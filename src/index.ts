@@ -21,7 +21,7 @@ let debugSubscriptionManager: DebugSubscriptionManager;
 let isFirstFetch = true;
 
 client.once('ready', async () => {
-  console.log('Ready!');
+  console.log('Discord client ready!');
   geraldId = client.user?.id;
   freebiesSubscriptionManager = await initFreebiesSubscrptionManager(client);
   debugSubscriptionManager = await initDebugSubscrptionManager(client);
@@ -48,8 +48,8 @@ client.once('ready', async () => {
   ggScraper.fetchFreebies();
   setInterval(() => ggScraper.fetchFreebies(), FetchIntervalMs);
 
-  await health();
-  console.log('Healthy!');
+  health();
+  console.log('Bot ready!');
 });
 
 client.on('message', (message) => {
