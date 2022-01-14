@@ -15,7 +15,17 @@ jobs:
       FETCH_INTERVAL: 1000
       HEALTH_ENDPOINT_PORT: 3050
 
+    outputs:
+      version: ${{ steps.output_version.outputs.version }}
+
     steps:
+      # test to see if why secrets don't work in env here, but work in ci
+      - name: Create version
+        run: echo "VERSION=$(date -u +%Y%m%d_%H%M%S_%N)" >> $GITHUB_ENV
+      - name: Output version
+        id: output_version
+        run: echo "::set-output name=version::$VERSION"
+
       - uses: actions/checkout@v2
       - name: Use Node.js
         uses: actions/setup-node@v1
@@ -23,5 +33,6 @@ jobs:
           node-version: "12.x"
       - run: npm ci
       - run: npm run build
+
       - run: npm start & npx wait-on -t 60000 http://localhost:${{ env.HEALTH_ENDPOINT_PORT }}/health
       - run: npm test
