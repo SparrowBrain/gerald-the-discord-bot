@@ -6,7 +6,6 @@ jobs:
   test:
     name: Auto-merge
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       - uses: koj-co/dependabot-pr-action@v1.1.12
         with:
