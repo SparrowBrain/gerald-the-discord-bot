@@ -9,7 +9,7 @@ on:
 
 jobs:
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
-  integration-fork:
+  test:
     runs-on: ubuntu-latest
     env:
       DISCORD_BOT_TOKEN: "${{ secrets.DISCORD_BOT_TOKEN }}"
@@ -19,6 +19,13 @@ jobs:
       HEALTH_ENDPOINT_PORT: 3050
 
     steps:
+      - name: Check secrets
+        if: ${{ env.DISCORD_BOT_TOKEN == null }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('Secrets not available. PR needs to be approved for testing.')
+
       # Check out merge commit
       - name: Fork based /ok-to-test checkout
         uses: actions/checkout@v2
@@ -36,7 +43,7 @@ jobs:
       - run: |
           echo "Integration tests... success! ;-)"
 
-      # Update check run called "integration-fork"
+      # Update check run called "test"
       - uses: actions/github-script@v5
         id: update-check-run
         if: ${{ always() }}
