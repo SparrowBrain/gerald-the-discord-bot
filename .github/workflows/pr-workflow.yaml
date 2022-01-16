@@ -12,12 +12,6 @@ jobs:
   integration-trusted:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-    env:
-      DISCORD_BOT_TOKEN: "${{ secrets.DISCORD_BOT_TOKEN }}"
-      TEST_CHANNEL_ID: "${{ secrets.TEST_CHANNEL_ID }}"
-      SCRAPE_URL: http://localhost:8090
-      FETCH_INTERVAL: 1000
-      HEALTH_ENDPOINT_PORT: 3050
 
     steps:
       - uses: actions/checkout@v2
@@ -29,7 +23,19 @@ jobs:
       - run: npm run build
 
       - run: npm start & npx wait-on -t 60000 http://localhost:${{ env.HEALTH_ENDPOINT_PORT }}/health
+        env:
+          DISCORD_BOT_TOKEN: "${{ secrets.DISCORD_BOT_TOKEN }}"
+          TEST_CHANNEL_ID: "${{ secrets.TEST_CHANNEL_ID }}"
+          SCRAPE_URL: http://localhost:8090
+          FETCH_INTERVAL: 1000
+          HEALTH_ENDPOINT_PORT: 3050
       - run: npm test
+        env:
+          DISCORD_BOT_TOKEN: "${{ secrets.DISCORD_BOT_TOKEN }}"
+          TEST_CHANNEL_ID: "${{ secrets.TEST_CHANNEL_ID }}"
+          SCRAPE_URL: http://localhost:8090
+          FETCH_INTERVAL: 1000
+          HEALTH_ENDPOINT_PORT: 3050
 
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
   integration-fork:
