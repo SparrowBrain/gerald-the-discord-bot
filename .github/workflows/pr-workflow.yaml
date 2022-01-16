@@ -8,41 +8,9 @@ on:
     types: [ok-to-test-command]
 
 jobs:
-  # Branch-based pull request
-  integration-trusted:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: "12.x"
-      - run: npm ci
-      - run: npm run build
-
-      - run: npm start & npx wait-on -t 60000 http://localhost:${{ env.HEALTH_ENDPOINT_PORT }}/health
-        env:
-          DISCORD_BOT_TOKEN: "${{ secrets.DISCORD_BOT_TOKEN }}"
-          TEST_CHANNEL_ID: "${{ secrets.TEST_CHANNEL_ID }}"
-          SCRAPE_URL: http://localhost:8090
-          FETCH_INTERVAL: 1000
-          HEALTH_ENDPOINT_PORT: 3050
-      - run: npm test
-        env:
-          DISCORD_BOT_TOKEN: "${{ secrets.DISCORD_BOT_TOKEN }}"
-          TEST_CHANNEL_ID: "${{ secrets.TEST_CHANNEL_ID }}"
-          SCRAPE_URL: http://localhost:8090
-          FETCH_INTERVAL: 1000
-          HEALTH_ENDPOINT_PORT: 3050
-
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
   integration-fork:
     runs-on: ubuntu-latest
-    if: github.event_name == 'repository_dispatch' &&
-      github.event.client_payload.slash_command.sha != '' &&
-      contains(github.event.client_payload.pull_request.head.sha, github.event.client_payload.slash_command.sha)
     env:
       DISCORD_BOT_TOKEN: "${{ secrets.DISCORD_BOT_TOKEN }}"
       TEST_CHANNEL_ID: "${{ secrets.TEST_CHANNEL_ID }}"
@@ -54,8 +22,6 @@ jobs:
       # Check out merge commit
       - name: Fork based /ok-to-test checkout
         uses: actions/checkout@v2
-        with:
-          ref: "refs/pull/${{ github.event.client_payload.pull_request.number }}/merge"
 
       - name: Use Node.js
         uses: actions/setup-node@v1
