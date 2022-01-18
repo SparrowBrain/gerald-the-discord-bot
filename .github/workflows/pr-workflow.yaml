@@ -76,13 +76,14 @@ jobs:
             });
 
             return result;
-    fail-cancelled:
-      runs-on: ubuntu-latest
 
-      steps:
-        - name: Fail cancelled workflow
-          if: ${{ cancelled() }}
-          uses: actions/github-script@v3
-          with:
-            script: |
-              core.setFailed('Workflow cancelled.')
+  fail-cancelled:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fail cancelled workflow
+        if: ${{ cancelled() }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('Workflow cancelled.')
