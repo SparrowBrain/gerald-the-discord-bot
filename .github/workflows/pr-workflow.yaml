@@ -78,6 +78,7 @@ jobs:
             return result;
 
   fail-cancelled:
+    needs: [test]
     runs-on: ubuntu-latest
 
     steps:
