@@ -44,11 +44,11 @@ jobs:
           echo "Integration tests... success! ;-)"
 
       - name: Fail cancelled workflow
-          if: ${{ cancelled() }}
-          uses: actions/github-script@v3
-          with:
-            script: |
-              core.setFailed('Workflow cancelled.')
+        if: ${{ cancelled() }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('Workflow cancelled.')
 
       # Update check run called "test"
       - uses: actions/github-script@v5
