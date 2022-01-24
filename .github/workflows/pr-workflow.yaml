@@ -1,5 +1,4 @@
 name: Integration tests
-concurrency: discord_api
 
 # Run secret-dependent integration tests only after /ok-to-test approval
 on:
@@ -11,6 +10,7 @@ jobs:
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
   test:
     runs-on: ubuntu-latest
+    concurrency: discord_api
     env:
       DISCORD_BOT_TOKEN: "${{ secrets.DISCORD_BOT_TOKEN }}"
       TEST_CHANNEL_ID: "${{ secrets.TEST_CHANNEL_ID }}"
@@ -43,10 +43,16 @@ jobs:
       - run: |
           echo "Integration tests... success! ;-)"
 
+      - name: Fail cancelled workflow
+          if: ${{ cancelled() }}
+          uses: actions/github-script@v3
+          with:
+            script: |
+              core.setFailed('Workflow cancelled.')
+
       # Update check run called "test"
       - uses: actions/github-script@v5
         id: update-check-run
-        if: ${{ always() }}
         env:
           number: ${{ github.event.client_payload.pull_request.number }}
           job: ${{ github.job }}
@@ -76,15 +82,3 @@ jobs:
             });
 
             return result;
-
-  fail-cancelled:
-    needs: [test]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Fail cancelled workflow
-        if: ${{ cancelled() }}
-        uses: actions/github-script@v3
-        with:
-          script: |
-            core.setFailed('Workflow cancelled.')
