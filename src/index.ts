@@ -14,7 +14,7 @@ import isDebugOnMessage from './messageFilters/isDebugOnMessage';
 import isDebugOffMessage from './messageFilters/isDebugOffMessage';
 import health from './health';
 
-const client = new Discord.Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
+const client = new Discord.Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES], partials: ['CHANNEL'] });
 let geraldId: string | undefined;
 let freebiesSubscriptionManager: FreebiesSubscriptionManager;
 let debugSubscriptionManager: DebugSubscriptionManager;

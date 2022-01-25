@@ -9,7 +9,7 @@ const fs = require('fs');
 
 let geraldId:string|undefined;
 let channel: TextChannel;
-const client = new Discord.Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
+const client = new Discord.Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES], partials: ['CHANNEL'] });
 const messages:Discord.Message[] = [];
 
 describe('freebies', () => {
