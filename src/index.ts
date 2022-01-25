@@ -1,4 +1,4 @@
-import Discord from 'discord.js';
+import Discord, { Intents } from 'discord.js';
 import { Token, FetchIntervalMs } from './config';
 import isHelpMessage from './messageFilters/isHelpMessage';
 import isStartMessage from './messageFilters/isStartMessage';
@@ -14,7 +14,7 @@ import isDebugOnMessage from './messageFilters/isDebugOnMessage';
 import isDebugOffMessage from './messageFilters/isDebugOffMessage';
 import health from './health';
 
-const client = new Discord.Client();
+const client = new Discord.Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
 let geraldId: string | undefined;
 let freebiesSubscriptionManager: FreebiesSubscriptionManager;
 let debugSubscriptionManager: DebugSubscriptionManager;
@@ -27,7 +27,7 @@ client.once('ready', async () => {
   debugSubscriptionManager = await initDebugSubscrptionManager(client);
 
   client.user?.setPresence({
-    activity: { name: '@me help', type: 'LISTENING' }
+    activities: [{ name: '@me help', type: 'LISTENING' }]
   });
 
   ggScraper.on('freebies-fetched', (urls: string[]): void => {
@@ -52,7 +52,7 @@ client.once('ready', async () => {
   console.log('Bot ready!');
 });
 
-client.on('message', (message) => {
+client.on('messageCreate', (message) => {
   if (message.mentions.users.first()?.id === geraldId) {
     console.log(message.toJSON());
 
