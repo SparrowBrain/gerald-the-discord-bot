@@ -45,26 +45,3 @@ jobs:
         with:
           name: build
           path: build-zip
-
-  deploy:
-    needs: [build]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: build-zip
-
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v10
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-          aws_secret_key: ${{ secrets.AWS_ACCESS_SECRET }}
-          application_name: gerald-the-discord-bot
-          environment_name: gerald-the-discord-bot-env
-          version_label: ${{needs.build.outputs.version}}
-          version_description: ${{github.SHA}}
-          region: eu-north-1
-          deployment_package: build-zip/${{needs.build.outputs.version}}.zip
