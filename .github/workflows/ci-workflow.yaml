@@ -45,3 +45,24 @@ jobs:
         with:
           name: build
           path: build-zip
+
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id:${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key:${{ secrets.AWS_ACCESS_SECRET }}
+          aws-region: eu-north-1
+
+      - name: Create CodeDeploy Deployment
+        id: deploy
+        run: |
+          aws deploy create-deployment \
+            --application-name gerald-deploy \
+            --deployment-group-name gerald-deployment-group \
+            --deployment-config-name CodeDeployDefault.OneAtATime \
+            --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
