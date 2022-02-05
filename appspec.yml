@@ -4,8 +4,12 @@ files:
  - source: .
    destination: /home/ec2-user/app
 hooks:
-  AfterInstall:
+  Install:
    - location: scripts/install_app_dependencies
+     timeout: 300
+     runas: root
+  AfterInstall:
+   - location: scripts/after_install
      timeout: 300
      runas: root
   ApplicationStart:
