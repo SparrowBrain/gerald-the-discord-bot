@@ -12,7 +12,7 @@ import { initDebugSubscrptionManager } from './debugSubsciptionsManager';
 import { initFreebiesSubscrptionManager } from './freebiesSubscriptions';
 import isDebugOnMessage from './messageFilters/isDebugOnMessage';
 import isDebugOffMessage from './messageFilters/isDebugOffMessage';
-import health from './health';
+import api from './api';
 
 const client = new Discord.Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES], partials: ['CHANNEL'] });
 let geraldId: string | undefined;
@@ -48,7 +48,7 @@ client.once('ready', async () => {
   ggScraper.fetchFreebies();
   setInterval(() => ggScraper.fetchFreebies(), FetchIntervalMs);
 
-  health();
+  api();
   console.log('Bot ready!');
 });
 
@@ -85,3 +85,8 @@ client.on('messageCreate', (message) => {
 });
 
 client.login(Token);
+
+process.on('SIGTERM', () => {
+  client.destroy();
+  console.log('Discord client destroyed');
+});

@@ -14,7 +14,7 @@ jobs:
       TEST_CHANNEL_ID: "${{ secrets.TEST_CHANNEL_ID }}"
       SCRAPE_URL: http://localhost:8090
       FETCH_INTERVAL: 1000
-      HEALTH_ENDPOINT_PORT: 3050
+      API_ENDPOINT: 3050
 
     outputs:
       version: ${{ steps.output_version.outputs.version }}
@@ -33,7 +33,7 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - run: npm start & npx wait-on -t 60000 http://localhost:${{ env.HEALTH_ENDPOINT_PORT }}/health
+      - run: npm start & npx wait-on -t 60000 http://localhost:${{ env.API_ENDPOINT }}/health
       - run: npm test
 
       - run: mkdir build-zip

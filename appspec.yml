@@ -1,10 +1,22 @@
 version: 0.0
 os: linux
 files:
- - source: .
-   destination: /home/ec2-user/app
+  - source: .
+    destination: /home/ec2-user/app
 hooks:
+  ApplicationStop:
+    - localtion: scripts/application_stop
+      timeout: 300
+      runas: qwx-dev
+  BeforeInstall:
+    - localtion: scripts/before_install
+      timeout: 300
+      runas: qwx-dev
   ApplicationStart:
-   - location: scripts/start_server
-     timeout: 300
-     runas: qwx-dev
+    - location: scripts/application_start
+      timeout: 300
+      runas: qwx-dev
+  ValidateService: #needs env curl
+    - location: scripts/validate_service
+      timeout: 300
+      runas: qwx-dev
