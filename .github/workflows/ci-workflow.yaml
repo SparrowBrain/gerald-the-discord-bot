@@ -36,14 +36,16 @@ jobs:
       - run: npm start & npx wait-on -t 60000 http://localhost:${{ env.HEALTH_ENDPOINT_PORT }}/health
       - run: npm test
 
-      - run: mkdir build-zip
-      - name: Generate deployment package
-        run: zip -r build-zip/$VERSION.zip * -x src/\* build-zip/\*
+      - run: mkdir build-zip      
+      - run: mv ./dist build-zip/dist
+      - run: mv ./node_modules build-zip/node_modules
+      - run: mv ./package.json build-zip/
+      - run: mv ./appspec.yml build-zip/
 
       - name: Publish artifact
         uses: actions/upload-artifact@master
         with:
-          name: build
+          name: $VERSION
           path: build-zip
 
   deploy:
@@ -51,6 +53,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: $VERSION
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -58,11 +65,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET }}
           aws-region: eu-north-1
 
-      - name: Create CodeDeploy Deployment
-        id: deploy
+      - name: Push to S3
+        run: |
+          aws deploy push \
+            --application-name gerald-deploy \
+            --ignore-hidden-files \
+            --s3-location s3://gerald-deploy/${{needs.build.outputs.version}}.zip \
+
+      - name: Deploy Revision
         run: |
           aws deploy create-deployment \
             --application-name gerald-deploy \
             --deployment-group-name gerald-deployment-group \
             --deployment-config-name CodeDeployDefault.OneAtATime \
-            --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
+            --s3-location bucket=gerald-deploy,key=${{needs.build.outputs.version}}.zip,bundleType=zip
