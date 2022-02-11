@@ -36,11 +36,9 @@ jobs:
       - run: npm start & npx wait-on -t 60000 http://localhost:${{ env.HEALTH_ENDPOINT_PORT }}/health
       - run: npm test
 
-      - run: mkdir build-zip      
-      - run: mv ./dist build-zip/dist
-      - run: mv ./node_modules build-zip/node_modules
-      - run: mv ./package.json build-zip/
-      - run: mv ./appspec.yml build-zip/
+      - run: mkdir build-zip
+      - name: Generate deployment package
+        run: zip -r build-zip/$VERSION.zip dist node_modules package.json appspec.yml scripts
 
       - name: Publish artifact
         uses: actions/upload-artifact@master
@@ -56,7 +54,10 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          name: $VERSION
+          name: ${{needs.build.outputs.version}}
+
+      - name: Unzip
+        run: unzip -d /deploy-package/ ${{needs.build.outputs.version}}.zip
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -71,6 +72,7 @@ jobs:
             --application-name gerald-deploy \
             --ignore-hidden-files \
             --s3-location s3://gerald-deploy/${{needs.build.outputs.version}}.zip \
+            --source /deploy-package
 
       - name: Deploy Revision
         run: |
