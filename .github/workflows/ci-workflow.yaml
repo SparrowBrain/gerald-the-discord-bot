@@ -58,7 +58,7 @@ jobs:
       
       - run: mkdir deploy-package
       - name: Unzip
-        run: unzip -d /deploy-package/ ${{needs.build.outputs.version}}.zip
+        run: unzip -d deploy-package ${{needs.build.outputs.version}}.zip
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
