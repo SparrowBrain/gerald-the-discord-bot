@@ -43,7 +43,7 @@ jobs:
       - name: Publish artifact
         uses: actions/upload-artifact@master
         with:
-          name: $VERSION
+          name: ${{ steps.output_version.outputs.version }}
           path: build-zip
 
   deploy:
