@@ -1,2 +1,6 @@
 #!/bin/bash
-curl -X POST http:/localhost:${API_ENDPOINT}/stop || echo "done"
+if nc -z -v -w5 localhost ${API_ENDPOINT}
+then
+  curl -X POST http:/localhost:${API_ENDPOINT}/stop
+fi
+
