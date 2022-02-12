@@ -1,6 +1,6 @@
 #!/bin/bash
 cd /home/ec2-user/app
-port=$(aws ssm get-parameters --region eu-north-1 --names API_PORT --query Parameters[0].Value) | tr -d '"'
+port=$(aws ssm get-parameters --region eu-north-1 --names API_PORT --query Parameters[0].Value)
 API_PORT="${port%\"}"
 API_PORT="${API_PORT#\"}"
 
