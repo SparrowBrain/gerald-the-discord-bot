@@ -1,4 +1,4 @@
-import { HealthEndpointPort } from '../config';
+import { ApiPort } from '../config';
 import express from 'express';
 import { Server } from 'http';
 
@@ -15,7 +15,7 @@ const api = () => {
     process.kill(process.pid, 'SIGTERM')
   });
 
-  server = app.listen(HealthEndpointPort, () => {
+  server = app.listen(ApiPort, () => {
   });
 };
 

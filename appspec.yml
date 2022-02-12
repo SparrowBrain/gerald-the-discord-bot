@@ -4,6 +4,10 @@ files:
   - source: .
     destination: /home/ec2-user/app
 hooks:
+  AfterBlockTraffic:
+    - location: scripts/after_block_traffic
+      timeout: 300
+      runas: root
   ApplicationStop:
     - location: scripts/application_stop
       timeout: 300
