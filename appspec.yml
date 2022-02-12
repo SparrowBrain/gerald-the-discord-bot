@@ -5,18 +5,18 @@ files:
     destination: /home/ec2-user/app
 hooks:
   ApplicationStop:
-    - localtion: scripts/application_stop
+    - location: scripts/application_stop
       timeout: 300
       runas: qwx-dev
   BeforeInstall:
-    - localtion: scripts/before_install
+    - location: scripts/before_install
       timeout: 300
       runas: qwx-dev
   ApplicationStart:
     - location: scripts/application_start
       timeout: 300
       runas: qwx-dev
-  ValidateService: #needs env curl
+  ValidateService:
     - location: scripts/validate_service
       timeout: 300
       runas: qwx-dev
