@@ -73,7 +73,7 @@ jobs:
             --application-name gerald-deploy \
             --ignore-hidden-files \
             --s3-location s3://gerald-deploy/${{needs.build.outputs.version}}.zip \
-            --source /deploy-package
+            --source deploy-package
 
       - name: Deploy Revision
         run: |
