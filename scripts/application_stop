@@ -1,6 +1,5 @@
 #!/bin/bash
-if nc -z -v -w5 localhost ${API_ENDPOINT}
-then
-  curl -X POST http:/localhost:${API_ENDPOINT}/stop
-fi
-
+exec 3>&2
+exec 2> /dev/null
+curl -X POST http:/localhost:${API_ENDPOINT}/stop || exec 2>&3
+exit 0
