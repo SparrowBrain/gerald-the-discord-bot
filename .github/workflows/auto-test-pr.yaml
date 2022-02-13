@@ -1,0 +1,23 @@
+name: Auto-test dependabot PR
+on: pull_request_target
+
+jobs:
+  auto-test:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: "${{ secrets.LITTLE_BUDDY_APP_ID }}"
+          private_key: "${{ secrets.LITTLE_BUDDY_PRIVATE_KEY }}"
+
+      - name: Add comment
+        uses: actions/github-script@0.3.0
+        # if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{ steps.generate_token.outputs.token }}
+          script: |
+            const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
+            github.issues.createComment({ issue_number, owner, repo, body: '/ok-to-test sha=${{github.event.pull_request.head.sha}}' });
