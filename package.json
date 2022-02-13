@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "@plant/https": "^1.0.1",
-    "aws-sdk": "2.1051.0",
+    "aws-sdk": "2.1073.0",
     "cheerio": "1.0.0-rc.10",
     "discord.js": "^13.6.0",
     "dotenv": "8.5.1",
