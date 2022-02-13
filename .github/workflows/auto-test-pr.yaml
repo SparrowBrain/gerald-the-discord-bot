@@ -14,10 +14,13 @@ jobs:
           private_key: "${{ secrets.LITTLE_BUDDY_PRIVATE_KEY }}"
 
       - name: Add comment
-        uses: actions/github-script@0.3.0
-        # if: github.event_name == 'pull_request'
+        uses: actions/github-script@v5
         with:
           github-token: ${{ steps.generate_token.outputs.token }}
           script: |
-            const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-            github.issues.createComment({ issue_number, owner, repo, body: '/ok-to-test sha=${{github.event.pull_request.head.sha}}' });
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '/ok-to-test sha=${{github.event.pull_request.head.sha}}'
+            })
