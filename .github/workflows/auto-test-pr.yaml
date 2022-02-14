@@ -36,11 +36,14 @@ jobs:
               return;
             }
 
+            core.info(`Found PR: ${dependabotPR.url}`);
+
             // Truncate the body to keep the size of the payload under the max
             if (dependabotPR.body) {
               dependabotPR.body = dependabotPR.body.slice(0, 1000)
             }
 
+            let clientPayload;
             clientPayload['pull_request'] = dependabotPR
 
             github.rest.repos.createDispatchEvent({
