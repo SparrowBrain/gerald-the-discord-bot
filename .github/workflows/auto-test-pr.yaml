@@ -25,6 +25,8 @@ jobs:
               state: "open" 
             });
 
+            core.info(pullRequests);
+
             for (const pr of pullRequests) {
               core.info(pr);
             }
