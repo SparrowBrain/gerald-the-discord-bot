@@ -27,7 +27,7 @@ jobs:
 
             core.info(pullRequests[0]);
 
-            const dependabotPR = pullRequests.data.find((pr) => pr.creator.login === "dependabot");
+            const dependabotPR = pullRequests.data.find((pr) => pr.user.login === "dependabot[bot]");
             if(dependabotPR === undefined){
               core.info("No dependabot PRs found. Stopping");
               return;
