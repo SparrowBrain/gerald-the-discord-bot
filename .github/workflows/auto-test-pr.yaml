@@ -19,13 +19,11 @@ jobs:
         with:
           github-token: ${{ steps.generate_token.outputs.token }}
           script: |
-            const pullRequests = github.rest.pulls.list({ 
+            const pullRequests = await github.rest.pulls.list({ 
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: "open" 
             });
-
-            core.info(pullRequests);
 
             for (const pr of pullRequests) {
               core.info(pr);
