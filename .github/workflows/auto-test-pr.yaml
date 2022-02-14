@@ -25,7 +25,10 @@ jobs:
               state: "open" 
             });
 
-            core.info(pullRequests[0]);
+            core.info(context.repo.owner);
+            core.info(context.repo.repo);
+
+            core.info(pullRequests.data[0]);
 
             const dependabotPR = pullRequests.data.find((pr) => pr.user.login === "dependabot[bot]");
             if(dependabotPR === undefined){
