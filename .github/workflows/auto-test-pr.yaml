@@ -1,7 +1,7 @@
 name: Auto-test dependabot PR
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "0 14 * * *"
 
 jobs:
   auto-test:
@@ -44,6 +44,6 @@ jobs:
             github.rest.repos.createDispatchEvent({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              event_type: ok-to-test-command,
+              event_type: "ok-to-test-command",
               client_payload: clientPayload,
             });
