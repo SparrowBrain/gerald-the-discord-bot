@@ -1,7 +1,7 @@
 name: Auto-Test Dependabot PRs
 on:
   schedule:
-    - cron: "0 14 * * *"
+    - cron: "*/10 * * * *"
 
 jobs:
   auto-test:
@@ -61,9 +61,9 @@ jobs:
             let clientPayload = {};
             clientPayload['pull_request'] = dependabotPR
 
-            github.rest.repos.createDispatchEvent({
+            octokit.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              event_type: "ok-to-test-command",
-              client_payload: clientPayload,
+              issue_number: dependabotPR.number,
+              body: `/ok-to-test sha=${dependabotPR.head.sha}`,
             });
