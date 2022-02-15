@@ -61,7 +61,7 @@ jobs:
             let clientPayload = {};
             clientPayload['pull_request'] = dependabotPR
 
-            octokit.rest.issues.createComment({
+            github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: dependabotPR.number,
