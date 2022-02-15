@@ -1,4 +1,4 @@
-name: Auto-test dependabot PR
+name: Auto-Test Dependabot PRs
 on:
   schedule:
     - cron: "0 14 * * *"
@@ -19,19 +19,39 @@ jobs:
         with:
           github-token: ${{ steps.generate_token.outputs.token }}
           script: |
+            const DEPENDABOT_NAME = "dependabot[bot]";
             const pullRequests = await github.rest.pulls.list({ 
               owner: context.repo.owner,
               repo: context.repo.repo,
-              state: "open" 
+              state: "open",
+              sort: "created",
+              direction: "asc",
             });
 
-            const dependabotPR = pullRequests.data.find((pr) => pr.user.login === "dependabot[bot]");
-            if(dependabotPR === undefined){
-              core.info("No dependabot PRs found. Stopping");
-              return;
+            let dependabotPR = undefined;
+            for (const pr of pullRequests.data){
+              if(pr.user.login === DEPENDABOT_NAME){
+                const commits = await github.rest.pulls.listCommits({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                });
+
+                if(commits.data.some(x => x.author.login !== DEPENDABOT_NAME)){
+                  core.info(`Non-${DEPENDABOT_NAME} commits found in PR ${pr.url}. Skipping.`);
+                  continue;
+                }
+
+                dependabotPR = pr;
+                core.info(`Found PR: ${dependabotPR.url}`);
+                break;
+              }
             }
 
-            core.info(`Found PR: ${dependabotPR.url}`);
+            if(dependabotPR === undefined){
+              core.info("No dependabot PRs found. Stopping.");
+              return;
+            }
 
             // Truncate the body to keep the size of the payload under the max
             if (dependabotPR.body) {
