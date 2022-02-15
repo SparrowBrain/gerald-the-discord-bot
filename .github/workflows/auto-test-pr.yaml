@@ -14,7 +14,7 @@ jobs:
           app_id: "${{ secrets.LITTLE_BUDDY_APP_ID }}"
           private_key: "${{ secrets.LITTLE_BUDDY_PRIVATE_KEY }}"
 
-      - name: Dispatch
+      - name: Comment
         uses: actions/github-script@v6
         with:
           github-token: ${{ steps.generate_token.outputs.token }}
@@ -39,6 +39,18 @@ jobs:
 
                 if(commits.data.some(x => x.author.login !== DEPENDABOT_NAME)){
                   core.info(`Non-${DEPENDABOT_NAME} commits found in PR ${pr.url}. Skipping.`);
+                  continue;
+                }
+
+                const comments = await github.rest.issues.listComments({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  per_page: 100,
+                });
+
+                if(comments.data.some(x=>x.body === `/ok-to-test sha={pr.head.sha}`)){
+                  core.info(`${pr.url} already has the test comment for sha=${pr.head.sha} issued. Skipping.`);
                   continue;
                 }
 
