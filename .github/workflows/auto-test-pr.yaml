@@ -1,7 +1,7 @@
 name: Auto-Test Dependabot PRs
 on:
   schedule:
-    - cron: "0 14 * * *"
+    - cron: "*/10 * * * *"
 
 jobs:
   auto-test:
