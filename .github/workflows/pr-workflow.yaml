@@ -53,6 +53,7 @@ jobs:
       # Update check run called "test"
       - uses: actions/github-script@v5
         id: update-check-run
+        if: ${{ always() }} 
         env:
           number: ${{ github.event.client_payload.pull_request.number }}
           job: ${{ github.job }}
@@ -80,5 +81,9 @@ jobs:
               status: 'completed',
               conclusion: process.env.conclusion
             });
+
+            if(process.env.conclusion === 'failure' || process.env.conclusion === 'cancelled'){
+              core.setFailed(`job.status is ${process.env.conclusion}`);
+            }
 
             return result;
