@@ -70,8 +70,12 @@ jobs:
               dependabotPR.body = dependabotPR.body.slice(0, 1000)
             }
 
-            let clientPayload = {};
-            clientPayload['pull_request'] = dependabotPR
+            const clientPayload = {
+              pull_request: dependabotPR,
+              slash_command: {
+                sha: dependabotPR.head.sha,
+              }
+            };
 
             core.info("Dispatching ok-to-test-command.");
             await github.rest.repos.createDispatchEvent({
