@@ -82,7 +82,7 @@ jobs:
             });
 
             const commentBody = `run tests sha=${dependabotPR.head.sha}`;
-            core.info(`Issuing comment: "${commendBody}"`);
+            core.info(`Issuing comment: "${commentBody}"`);
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
