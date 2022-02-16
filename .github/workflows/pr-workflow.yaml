@@ -27,8 +27,14 @@ jobs:
             core.setFailed('Secrets not available. PR needs to be approved for testing.')
 
       # Check out merge commit
+      - name: Branch based PR checkout
+        uses: actions/checkout@v2
+          if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+          
       - name: Fork based /ok-to-test checkout
         uses: actions/checkout@v2
+        with:
+          ref: 'refs/pull/${{ github.event.client_payload.pull_request.number }}/merge'
 
       - name: Use Node.js
         uses: actions/setup-node@v1
