@@ -81,6 +81,8 @@ jobs:
             --application-name gerald-deploy \
             --deployment-group-name gerald-deployment-group \
             --deployment-config-name CodeDeployDefault.OneAtATime \
+            --file-exists-behavior: OVERWRITE \
+            --ignore-application-stop-failures \
             --s3-location bucket=gerald-deploy,key=${{needs.build.outputs.version}}.zip,bundleType=zip \
             | jq '.deploymentId' )
           echo "DEPLOYMENT_ID=$deploymentId" >> "$GITHUB_ENV"
