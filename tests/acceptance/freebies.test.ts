@@ -4,11 +4,14 @@
 
 import Discord, { Intents, TextChannel } from 'discord.js';
 import { ScrapeUrl, TestChannelId, Token } from '../../src/config';
-import { GameFlood, InitPage, LivePage, NewGameOnSteam, NonSubscriberGame } from './constants';
+import { LivePage } from './constants';
+import { getGameFloodPage, getInitPage, getNewGameOnSteamPage, getNewNonSubscriberGamePage, getNewsItems } from './pages/pages';
+import { NewsItem } from './pages/types';
 const fs = require('fs');
 
 let geraldId:string|undefined;
 let channel: TextChannel;
+let newsItems :NewsItem[] = [];
 const client = new Discord.Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES], partials: ['CHANNEL'] });
 const messages:Discord.Message[] = [];
 
@@ -67,7 +70,7 @@ describe('freebies', () => {
     await delay(5000);
     messages.shift();
 
-    setPage(NewGameOnSteam);
+    setPage(getNewGameOnSteamPage(newsItems));
 
     await delay(5000);
     const message = messages.shift();
@@ -79,7 +82,7 @@ describe('freebies', () => {
     await delay(5000);
     messages.shift();
 
-    setPage(NonSubscriberGame);
+    setPage(getNewNonSubscriberGamePage(newsItems));
 
     await delay(5000);
     const message = messages.shift();
@@ -91,7 +94,7 @@ describe('freebies', () => {
     await delay(5000);
     messages.shift();
 
-    setPage(GameFlood);
+    setPage(getGameFloodPage(newsItems));
 
     await delay(5000);
     const message = messages.shift();
@@ -107,10 +110,12 @@ function delay (ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const setPage = (path:string) => {
-  fs.copyFileSync(path, LivePage);
+const setPage = (contents:string) => {
+  fs.writeFileSync(LivePage, contents);
 };
 
 const resetPage = () => {
-  setPage(InitPage);
+  newsItems = getNewsItems();
+  const contents = getInitPage(newsItems);
+  setPage(contents);
 };
