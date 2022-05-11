@@ -27,6 +27,12 @@ export const getGameFloodPage = (items:NewsItem[]):string => {
   return getPage(updatedItems);
 };
 
+export const getOldGamePage = (items:NewsItem[]):string => {
+  const newItem = { title: 'Old Test Game', url: '/freebie/old-game/', date: new Date() };
+  const updatedItems = addNewItem(newItem, items, 1);
+  return getPage(updatedItems);
+};
+
 export const getNewsItems = ():NewsItem[] => {
   const items :NewsItem[] = [];
   for (let i = 0; i < 18; i++) {
@@ -36,7 +42,9 @@ export const getNewsItems = ():NewsItem[] => {
   return items;
 };
 
-const addNewItem = (newItem:NewsItem, items:NewsItem[]):NewsItem[] => {
+const addNewItem = (newItem:NewsItem, items:NewsItem[], index:number = 0):NewsItem[] => {
   items.pop();
-  return [newItem].concat(items);
+  const top = items.slice(0, index);
+  const bottom = items.slice(index);
+  return top.concat([newItem]).concat(bottom);
 };

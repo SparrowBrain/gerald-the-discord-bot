@@ -5,7 +5,7 @@
 import Discord, { Intents, TextChannel } from 'discord.js';
 import { ScrapeUrl, TestChannelId, Token } from '../../src/config';
 import { LivePage } from './constants';
-import { getGameFloodPage, getInitPage, getNewGameOnSteamPage, getNewNonSubscriberGamePage, getNewsItems } from './pages/pages';
+import { getGameFloodPage, getInitPage, getNewGameOnSteamPage, getNewNonSubscriberGamePage, getNewsItems, getOldGamePage } from './pages/pages';
 import { NewsItem } from './pages/types';
 const fs = require('fs');
 
@@ -95,6 +95,18 @@ describe('freebies', () => {
     messages.shift();
 
     setPage(getGameFloodPage(newsItems));
+
+    await delay(5000);
+    const message = messages.shift();
+    expect(message).toBeUndefined();
+  }, 30000);
+
+  it('should not show game added below the last already existing game', async () => {
+    channel.send(`<@!${geraldId}> start`);
+    await delay(5000);
+    messages.shift();
+
+    setPage(getOldGamePage(newsItems));
 
     await delay(5000);
     const message = messages.shift();
