@@ -1,4 +1,4 @@
-import { TextChannel, DMChannel, NewsChannel, PartialDMChannel, ThreadChannel } from 'discord.js';
+import { TextChannel, DMChannel, NewsChannel, PartialDMChannel, ThreadChannel, VoiceChannel } from 'discord.js';
 import { EventEmitter } from 'events';
 import { Broadcast } from '../shared/subscriptions/Broadcast';
 
@@ -16,7 +16,7 @@ export class FreebiesSubscriptionManager extends EventEmitter {
   constructor (channels: (DMChannel | NewsChannel | TextChannel)[]) {
     super();
 
-    channels.forEach((channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel) =>
+    channels.forEach((channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel | VoiceChannel) =>
       this.addSubscription(channel)
     );
   }
@@ -27,7 +27,7 @@ export class FreebiesSubscriptionManager extends EventEmitter {
     });
   }
 
-  public subscribe (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel) {
+  public subscribe (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel | VoiceChannel) {
     if (this.subscriptions.has(channel.id)) {
       channel.send("Already spammin'...");
     } else {
@@ -36,7 +36,7 @@ export class FreebiesSubscriptionManager extends EventEmitter {
     }
   }
 
-  public unsubscribe (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel) {
+  public unsubscribe (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel | VoiceChannel) {
     if (this.subscriptions.has(channel.id)) {
       channel.send('ok...');
       this.removeSubscription(channel);
@@ -45,12 +45,12 @@ export class FreebiesSubscriptionManager extends EventEmitter {
     }
   }
 
-  public tellSubsNumber (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel) {
+  public tellSubsNumber (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel | VoiceChannel) {
     const subsCount = this.subscriptions.size;
     channel.send('Currently I have ' + subsCount + ' freebies subscribers.');
   }
 
-  private addSubscription (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel) {
+  private addSubscription (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel | VoiceChannel) {
     const sendToChannel = (link: string): void => {
       channel.send(link);
     };
@@ -59,7 +59,7 @@ export class FreebiesSubscriptionManager extends EventEmitter {
     console.log('freebies subscription added to ' + channel.id);
   }
 
-  private removeSubscription (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel) {
+  private removeSubscription (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel | VoiceChannel) {
     this.subscriptions.delete(channel.id);
     this.emit('freebies-subscriptions-changed', [...this.subscriptions.keys()]);
     console.log('freebies subscription removed from ' + channel.id);
