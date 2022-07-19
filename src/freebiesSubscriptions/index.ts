@@ -11,7 +11,7 @@ export const initFreebiesSubscrptionManager = async (
 ): Promise<FreebiesSubscriptionManager> => {
   const ids = await load(FreebiesSubsFile);
   console.log('loaded freebies channel ids: ' + ids);
-  const channels = await fetchChannels(debugSubsciptionsManager, client, ids);
+  const channels = await fetchChannels(client, ids);
   const subscriptionManager = new FreebiesSubscriptionManager(debugSubsciptionsManager, channels);
   subscriptionManager.on('freebies-subscriptions-changed', (ids: string[]) => {
     save(ids, FreebiesSubsFile);

@@ -1,12 +1,11 @@
 import { DMChannel, Client, NewsChannel, TextChannel, AnyChannel } from 'discord.js';
-import { DebugSubscriptionManager } from '../../debugSubsciptionsManager/DebugSubscriptionManager';
 
-export const fetchChannels = async (debugSubsciptionsManager: DebugSubscriptionManager, client: Client, ids: string[]): Promise<(DMChannel | NewsChannel | TextChannel)[]> => {
+export const fetchChannels = async (client: Client, ids: string[]): Promise<(DMChannel | NewsChannel | TextChannel)[]> => {
   const fetchedChannels: AnyChannel[] = (await Promise.all(ids.filter(x => x).map(async (id: string) => {
     try {
       return await client.channels.fetch(id);
     } catch (ex) {
-      debugSubsciptionsManager.broadcastMessage(`Error while fetching channel ${id}. ${ex}`);
+      console.error(`Error while fetching channel ${id}. ${ex}`);
       return null;
     }
   }
@@ -23,7 +22,7 @@ export const fetchChannels = async (debugSubsciptionsManager: DebugSubscriptionM
       } else if (channel.type === 'GUILD_TEXT') {
         return channel as TextChannel;
       } else {
-        debugSubsciptionsManager.broadcastMessage(`Unexpected channel id: ${channel.id}, type: ${channel.type}`);
+        console.error(`Unexpected channel id: ${channel.id} type: ${channel.type}`);
         throw Error('unexpected channel');
       }
     });
