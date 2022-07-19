@@ -15,7 +15,7 @@ export class FreebiesSubscriptionManager extends EventEmitter {
   subscriptions: Map<string, Broadcast> = new Map();
   debugSubsciptionsManager: DebugSubscriptionManager;
 
-    constructor(debugSubsciptionsManager: DebugSubscriptionManager, channels: TextBasedChannel[]) {
+  constructor (debugSubsciptionsManager: DebugSubscriptionManager, channels: TextBasedChannel[]) {
     super();
 
     this.debugSubsciptionsManager = debugSubsciptionsManager;
