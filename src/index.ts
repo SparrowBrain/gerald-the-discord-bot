@@ -1,4 +1,4 @@
-import Discord, { Intents } from 'discord.js';
+import Discord, { ActivityType, GatewayIntentBits, Partials } from 'discord.js';
 import { Token, FetchIntervalMs } from './config';
 import isHelpMessage from './messageFilters/isHelpMessage';
 import isStartMessage from './messageFilters/isStartMessage';
@@ -14,7 +14,7 @@ import isDebugOnMessage from './messageFilters/isDebugOnMessage';
 import isDebugOffMessage from './messageFilters/isDebugOffMessage';
 import api from './api';
 
-const client = new Discord.Client({ intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES], partials: ['CHANNEL'] });
+const client = new Discord.Client({ intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages], partials: [Partials.Channel] });
 let geraldId: string | undefined;
 let freebiesSubscriptionManager: FreebiesSubscriptionManager;
 let debugSubscriptionManager: DebugSubscriptionManager;
@@ -27,7 +27,7 @@ client.once('ready', async () => {
   debugSubscriptionManager = await initDebugSubscrptionManager(client);
 
   client.user?.setPresence({
-    activities: [{ name: '@me help', type: 'LISTENING' }]
+    activities: [{ name: '@me help', type: ActivityType.Listening }]
   });
 
   ggScraper.on('freebies-fetched', (urls: string[]): void => {

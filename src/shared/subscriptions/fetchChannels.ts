@@ -1,7 +1,7 @@
-import { DMChannel, Client, NewsChannel, TextChannel, AnyChannel } from 'discord.js';
+import { Client, Channel, TextBasedChannel } from 'discord.js';
 
-export const fetchChannels = async (client: Client, ids: string[]): Promise<(DMChannel | NewsChannel | TextChannel)[]> => {
-  const fetchedChannels: AnyChannel[] = (await Promise.all(ids.filter(x => x).map(async (id: string) => {
+export const fetchChannels = async (client: Client, ids: string[]): Promise<(TextBasedChannel)[]> => {
+  const fetchedChannels: Channel[] = (await Promise.all(ids.filter(x => x).map(async (id: string) => {
     try {
       return await client.channels.fetch(id);
     } catch (ex) {
@@ -11,20 +11,10 @@ export const fetchChannels = async (client: Client, ids: string[]): Promise<(DMC
     }
   }
   )))
-    .filter((channel: AnyChannel | null) => channel !== null) as AnyChannel[];
+    .filter((channel: Channel | null) => channel !== null) as Channel[];
 
-  const channels: (DMChannel | NewsChannel | TextChannel)[] = fetchedChannels
-    .filter((channel: AnyChannel) => channel.type === 'GUILD_TEXT' || channel.type === 'DM' || channel.type === 'GUILD_NEWS')
-    .map((channel) => {
-      if (channel.type === 'DM') {
-        return channel as DMChannel;
-      } else if (channel.type === 'GUILD_NEWS') {
-        return channel as NewsChannel;
-      } else if (channel.type === 'GUILD_TEXT') {
-        return channel as TextChannel;
-      } else {
-        throw Error('unexpected channel');
-      }
-    });
+  const channels: (TextBasedChannel)[] = fetchedChannels
+    .filter((channel: Channel) => channel.isTextBased())
+    .map((channel: Channel) => channel as TextBasedChannel);
   return channels;
 };

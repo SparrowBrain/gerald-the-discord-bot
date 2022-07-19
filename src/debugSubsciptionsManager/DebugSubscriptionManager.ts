@@ -1,4 +1,4 @@
-import { TextChannel, DMChannel, NewsChannel, PartialDMChannel, ThreadChannel, VoiceChannel } from 'discord.js';
+import { TextBasedChannel } from 'discord.js';
 import { EventEmitter } from 'events';
 import { Broadcast } from '../shared/subscriptions/Broadcast';
 
@@ -13,10 +13,10 @@ export declare interface DebugSubscriptionManager {
 export class DebugSubscriptionManager extends EventEmitter {
   subscriptions: Map<string, Broadcast> = new Map();
 
-  constructor (channels: (TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel | VoiceChannel)[]) {
+  constructor (channels: (TextBasedChannel)[]) {
     super();
 
-    channels.forEach((channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel | VoiceChannel) =>
+    channels.forEach((channel: TextBasedChannel) =>
       this.addSubscription(channel)
     );
   }
@@ -28,7 +28,7 @@ export class DebugSubscriptionManager extends EventEmitter {
     });
   }
 
-  public subscribe (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel | VoiceChannel) {
+  public subscribe (channel: TextBasedChannel) {
     if (this.subscriptions.has(channel.id)) {
       channel.send("Already spammin'...");
     } else {
@@ -37,7 +37,7 @@ export class DebugSubscriptionManager extends EventEmitter {
     }
   }
 
-  public unsubscribe (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel | VoiceChannel) {
+  public unsubscribe (channel: TextBasedChannel) {
     if (this.subscriptions.has(channel.id)) {
       channel.send('stopping debug');
       this.removeSubscription(channel);
@@ -46,7 +46,7 @@ export class DebugSubscriptionManager extends EventEmitter {
     }
   }
 
-  private addSubscription (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel | VoiceChannel) {
+  private addSubscription (channel: TextBasedChannel) {
     const sendToChannel = (link: string): void => {
       channel.send(link);
     };
@@ -55,7 +55,7 @@ export class DebugSubscriptionManager extends EventEmitter {
     console.log('debug subscription added to ' + channel.id);
   }
 
-  private removeSubscription (channel: TextChannel | DMChannel | NewsChannel | PartialDMChannel | ThreadChannel | VoiceChannel) {
+  private removeSubscription (channel: TextBasedChannel) {
     this.subscriptions.delete(channel.id);
     this.emit('debug-subscriptions-changed', [...this.subscriptions.keys()]);
     console.log('debug subscription removed from ' + channel.id);
