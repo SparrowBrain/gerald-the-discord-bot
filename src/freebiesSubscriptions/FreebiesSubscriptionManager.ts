@@ -1,5 +1,6 @@
 import { TextBasedChannel } from 'discord.js';
 import { EventEmitter } from 'events';
+import { DebugSubscriptionManager } from '../debugSubsciptionsManager/DebugSubscriptionManager';
 import { Broadcast } from '../shared/subscriptions/Broadcast';
 
 export declare interface FreebiesSubscriptionManager {
@@ -12,18 +13,25 @@ export declare interface FreebiesSubscriptionManager {
 // eslint-disable-next-line no-redeclare
 export class FreebiesSubscriptionManager extends EventEmitter {
   subscriptions: Map<string, Broadcast> = new Map();
+  debugSubsciptionsManager: DebugSubscriptionManager;
 
-  constructor (channels: (TextBasedChannel)[]) {
+    constructor(debugSubsciptionsManager: DebugSubscriptionManager, channels: TextBasedChannel[]) {
     super();
 
+    this.debugSubsciptionsManager = debugSubsciptionsManager;
     channels.forEach((channel: TextBasedChannel) =>
       this.addSubscription(channel)
     );
   }
 
   public broadcastMessage (message: string): void {
-    this.subscriptions.forEach((send) => {
-      send(message);
+    this.subscriptions.forEach((send, id) => {
+      try {
+        send(message);
+      } catch (ex) {
+        this.debugSubsciptionsManager.broadcastMessage(`Error while sending message to ${id} channel. ${ex}`);
+        return null;
+      }
     });
   }
 

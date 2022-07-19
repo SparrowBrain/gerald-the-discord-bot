@@ -5,8 +5,7 @@ export const fetchChannels = async (client: Client, ids: string[]): Promise<(Tex
     try {
       return await client.channels.fetch(id);
     } catch (ex) {
-      console.error(ex);
-      console.log(`Error while fetching channel ${id}.`);
+      console.error(`Error while fetching channel ${id}. ${ex}`);
       return null;
     }
   }

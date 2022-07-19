@@ -23,8 +23,8 @@ let isFirstFetch = true;
 client.once('ready', async () => {
   console.log('Discord client ready!');
   geraldId = client.user?.id;
-  freebiesSubscriptionManager = await initFreebiesSubscrptionManager(client);
   debugSubscriptionManager = await initDebugSubscrptionManager(client);
+  freebiesSubscriptionManager = await initFreebiesSubscrptionManager(client, debugSubscriptionManager);
 
   client.user?.setPresence({
     activities: [{ name: '@me help', type: ActivityType.Listening }]
