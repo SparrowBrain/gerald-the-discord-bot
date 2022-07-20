@@ -15,5 +15,7 @@ export const fetchChannels = async (client: Client, ids: string[]): Promise<(Tex
   const channels: (TextBasedChannel)[] = fetchedChannels
     .filter((channel: Channel) => channel.isTextBased())
     .map((channel: Channel) => channel as TextBasedChannel);
+
+  console.log(channels);
   return channels;
 };
