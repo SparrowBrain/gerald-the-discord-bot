@@ -25,13 +25,8 @@ export class FreebiesSubscriptionManager extends EventEmitter {
   }
 
   public broadcastMessage (message: string): void {
-    this.subscriptions.forEach((send, id) => {
-      try {
-        send(message);
-      } catch (ex) {
-        this.debugSubsciptionsManager.broadcastMessage(`Error while sending message to ${id} channel. ${ex}`);
-        return null;
-      }
+    this.subscriptions.forEach((send) => {
+      send(message);
     });
   }
 
@@ -60,7 +55,8 @@ export class FreebiesSubscriptionManager extends EventEmitter {
 
   private addSubscription (channel: TextBasedChannel) {
     const sendToChannel = (link: string): void => {
-      channel.send(link);
+      channel.send(link)
+        .catch((reason:any) => this.debugSubsciptionsManager.broadcastMessage(`Error while sending message to ${channel.id} channel. ${reason}`));
     };
     this.subscriptions.set(channel.id, sendToChannel);
     this.emit('freebies-subscriptions-changed', [...this.subscriptions.keys()]);
