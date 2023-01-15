@@ -49,7 +49,7 @@ jobs:
                   per_page: 100,
                 });
 
-                if(comments.data.some(x => x.body === `run tests sha=${pr.head.sha}`)){
+                if(comments.data.some(x => x.body === `/ok-to-test sha=${pr.head.sha}`)){
                   core.info(`${pr.url} already has the test comment for sha=${pr.head.sha} issued. Skipping.`);
                   continue;
                 }
@@ -85,7 +85,7 @@ jobs:
               client_payload: clientPayload,
             });
 
-            const commentBody = `run tests sha=${dependabotPR.head.sha}`;
+            const commentBody = `/ok-to-test sha=${dependabotPR.head.sha}`;
             core.info(`Issuing comment: "${commentBody}"`);
             await github.rest.issues.createComment({
               owner: context.repo.owner,
