@@ -32,7 +32,7 @@
     "@plant/http": "^1.0.4",
     "@plant/plant": "^2.5.0",
     "@types/cheerio": "^0.22.31",
-    "@types/express": "^4.17.14",
+    "@types/express": "^4.17.16",
     "@types/jest": "^27.4.1",
     "@types/node": "^18.11.18",
     "@types/source-map-support": "^0.5.6",
