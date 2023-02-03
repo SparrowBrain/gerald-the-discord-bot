@@ -23,7 +23,7 @@ jobs:
           private_key: "${{ secrets.LITTLE_BUDDY_PRIVATE_KEY }}"
 
       - name: Slash Command Dispatch
-        if: contains(github.event.client_payload.pull_request.head.sha, github.event.client_payload.slash_command.args.named.sha)
+        if: contains(github.event.body, github.event.issue.pull_request.head.sha)
         uses: peter-evans/slash-command-dispatch@v3
         env:
           TOKEN: ${{ steps.generate_token.outputs.token }}
@@ -32,12 +32,12 @@ jobs:
           # token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # PAT or OAuth token will also work
           reaction-token: ${{ secrets.GITHUB_TOKEN }}
           issue-type: pull-request
-          commands: ok-to-test
+          commands: pr-workflow
           permission: write
           dispatch-type: workflow
           static-args: |
-            sha=${{ github.event.client_payload.slash_command.args.named.sha }}
-            pull_request_number=${{ github.event.client_payload.pull_request.number }}
+            sha, 
+            pull_request_number=${{ github.event.issue.pull_request.number }}
 
       - name: Edit comment with error message
         if: steps.scd.outputs.error-message
