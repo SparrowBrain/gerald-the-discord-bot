@@ -1,22 +1,9 @@
 name: Integration tests
 
-# Run secret-dependent integration tests only after /ok-to-test approval
 on:
   pull_request:
-  workflow_dispatch:
-    types: [ok-to-test-command]
-    inputs:
-      sha:
-        description: "SHA"
-        required: true
-        type: string
-      pull_request_number:
-        description: "Pull request number"
-        required: true
-        type: string
 
 jobs:
-  # Repo owner has commented /ok-to-test on a (fork-based) pull request
   test:
     runs-on: ubuntu-latest
     concurrency: discord_api
@@ -33,20 +20,10 @@ jobs:
         uses: actions/github-script@v3
         with:
           script: |
-            core.setFailed('Secrets not available. PR needs to be approved for testing.')
+            core.setFailed('Secrets not available.')
 
-      # Check out merge commit
       - name: Branch based PR checkout
         uses: actions/checkout@v3
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-
-      - name: Fork based /ok-to-test checkout
-        uses: actions/checkout@v3
-        if: github.event_name == 'workflow_dispatch' &&
-          github.event.inputs.sha != '' &&
-          github.event.inputs.pull_request_number != ''
-        with:
-          ref: "refs/pull/${{ github.event.inputs.pull_request_number }}/merge"
 
       - name: Use Node.js
         uses: actions/setup-node@v3
@@ -67,42 +44,3 @@ jobs:
         with:
           script: |
             core.setFailed('Workflow cancelled.')
-
-      # Update check run called "test"
-      - uses: actions/github-script@v5
-        id: update-check-run
-        if: github.event_name == 'workflow_dispatch' &&
-          github.event.inputs.sha != ''
-        env:
-          number: ${{ github.event.inputs.pull_request_number }}
-          job: ${{ github.job }}
-          # Conveniently, job.status maps to https://developer.github.com/v3/checks/runs/#update-a-check-run
-          conclusion: ${{ job.status }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const { data: pull } = await github.rest.pulls.get({
-              ...context.repo,
-              pull_number: process.env.number
-            });
-            const ref = pull.head.sha;
-
-            const { data: checks } = await github.rest.checks.listForRef({
-              ...context.repo,
-              ref
-            });
-
-            const check = checks.check_runs.filter(c => c.name === process.env.job);
-
-            const { data: result } = await github.rest.checks.update({
-              ...context.repo,
-              check_run_id: check[0].id,
-              status: 'completed',
-              conclusion: process.env.conclusion
-            });
-
-            if(process.env.conclusion === 'failure' || process.env.conclusion === 'cancelled'){
-              core.setFailed(`job.status is ${process.env.conclusion}`);
-            }
-
-            return result;
