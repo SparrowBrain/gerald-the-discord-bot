@@ -7,17 +7,9 @@ jobs:
   auto-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate token
-        id: generate_token
-        uses: tibdex/github-app-token@v1
-        with:
-          app_id: "${{ secrets.LITTLE_BUDDY_APP_ID }}"
-          private_key: "${{ secrets.LITTLE_BUDDY_PRIVATE_KEY }}"
-
       - name: Dispatch
         uses: actions/github-script@v6
         with:
-          github-token: ${{ steps.generate_token.outputs.token }}
           script: |
             const DEPENDABOT_NAME = "dependabot[bot]";
             const pullRequests = await github.rest.pulls.list({ 
