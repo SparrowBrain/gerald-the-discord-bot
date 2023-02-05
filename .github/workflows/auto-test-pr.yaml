@@ -10,6 +10,7 @@ jobs:
       - name: Dispatch
         uses: actions/github-script@v6
         with:
+          github-token: "${{ secrets.PERSONAL_TOKEN }}"
           script: |
             const DEPENDABOT_NAME = "dependabot[bot]";
             const pullRequests = await github.rest.pulls.list({ 
