@@ -37,4 +37,8 @@ export class Memory extends EventEmitter {
         this.emit('new-link-found', link);
       });
     };
+
+    public getLinks = () => {
+      return this.knownLinks;
+    }
 }

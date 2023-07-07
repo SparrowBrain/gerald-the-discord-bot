@@ -9,8 +9,8 @@
     "build": "tsc",
     "build:watch": "onchange \"src/**/*.ts\" -- npm run build",
     "test": "jest",
-    "test:acceptance": "jest --testPathPattern=tests/acceptance",
-    "test:unit": "jest --watchAll --testPathPattern=src",
+    "test:acceptance": "jest --testPathPattern=/tests/acceptance/",
+    "test:unit": "jest --watchAll --testPathIgnorePatterns=/tests/acceptance/",
     "view:coverage": "serve coverage/lcov-report",
     "clean": "rm -rf coverage src/**/*.js src/**/*.map"
   },

@@ -1,5 +1,6 @@
-import Discord, { ActivityType, GatewayIntentBits, Partials } from 'discord.js';
+import Discord, { ActivityType, GatewayIntentBits, Partials, TextBasedChannel } from 'discord.js';
 import { Token, FetchIntervalMs } from './config';
+import isLinksMessage from './messageFilters/isLinksMessage';
 import isHelpMessage from './messageFilters/isHelpMessage';
 import isStartMessage from './messageFilters/isStartMessage';
 import isStopMessage from './messageFilters/isStopMessage';
@@ -80,6 +81,12 @@ client.on('messageCreate', (message) => {
 
     if (isDebugOffMessage({ content: message.content })) {
       debugSubscriptionManager.unsubscribe(message.channel);
+    }
+
+    if (isLinksMessage({ content: message.content })) {
+      const links = memory.getLinks();
+      console.log(links);
+      (message.channel as TextBasedChannel).send([...links].join('\r\n'));
     }
   }
 });
