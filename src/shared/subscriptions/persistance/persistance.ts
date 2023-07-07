@@ -3,13 +3,13 @@ import { saveToS3, loadFromS3 } from './s3';
 import * as config from '../../../config';
 import { SubscriptionsProvider } from '../provider';
 
-export const save = (channelIds: string[], file: string): void => {
+export const save = async (channelIds: string[], file: string): Promise<void> => {
   if (config.SubsProvider === SubscriptionsProvider.File) {
     console.log(`saving subs to local file ${file}`);
     saveToFile(channelIds, file);
   } else if (config.SubsProvider === SubscriptionsProvider.S3) {
     console.log(`saving subs to s3 ${file}`);
-    saveToS3(channelIds, file);
+    await saveToS3(channelIds, file);
   } else {
     throw new Error('Invalid subscriptions provider configuraiton');
   }

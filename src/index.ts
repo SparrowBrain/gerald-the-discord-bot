@@ -1,5 +1,5 @@
 import Discord, { ActivityType, GatewayIntentBits, Partials, TextBasedChannel } from 'discord.js';
-import { Token, FetchIntervalMs } from './config';
+import { Token, FetchIntervalMs, FetchRandomIntervalMs } from './config';
 import isLinksMessage from './messageFilters/isLinksMessage';
 import isHelpMessage from './messageFilters/isHelpMessage';
 import isStartMessage from './messageFilters/isStartMessage';
@@ -47,7 +47,7 @@ client.once('ready', async () => {
     }
   });
   ggScraper.fetchFreebies();
-  setInterval(() => ggScraper.fetchFreebies(), FetchIntervalMs);
+  setInterval(() => ggScraper.fetchFreebies(), FetchIntervalMs + Math.random() * FetchRandomIntervalMs);
 
   api();
   console.log('Bot ready!');
@@ -86,7 +86,11 @@ client.on('messageCreate', (message) => {
     if (isLinksMessage({ content: message.content })) {
       const links = memory.getLinks();
       console.log(links);
-      (message.channel as TextBasedChannel).send([...links].join('\r\n'));
+      try {
+        (message.channel as TextBasedChannel).send([...links].join('\r\n'));
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
 });

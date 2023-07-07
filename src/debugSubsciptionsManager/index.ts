@@ -11,8 +11,8 @@ export const initDebugSubscrptionManager = async (
   console.log('loaded debug channel ids: ' + ids);
   const channels = await fetchChannels(client, ids);
   const subscriptionManager = new DebugSubscriptionManager(channels);
-  subscriptionManager.on('debug-subscriptions-changed', (ids: string[]) => {
-    save(ids, DebugSubsFile);
+  subscriptionManager.on('debug-subscriptions-changed', async (ids: string[]) => {
+    await save(ids, DebugSubsFile);
   });
   return subscriptionManager;
 };
