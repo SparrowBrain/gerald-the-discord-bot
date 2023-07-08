@@ -1,4 +1,4 @@
 export const enum SubscriptionsProvider {
-    File = "FILE",
-    S3 = "S3"
+    File = 'FILE',
+    S3 = 'S3'
 }

@@ -4,6 +4,7 @@ import * as config from '../../../config';
 
 export const saveToS3 = async (channelIds: string[], file: string): Promise<void> => {
   const s3 = new S3({
+    region: 'eu-north-1',
     credentials: {
       accessKeyId: config?.AwsAccessKeyId ?? '',
       secretAccessKey: config?.AwsSecretAccessKey ?? ''
@@ -29,6 +30,7 @@ export const saveToS3 = async (channelIds: string[], file: string): Promise<void
 
 export const loadFromS3 = async (file: string): Promise<string[]> => {
   const s3 = new S3({
+    region: 'eu-north-1',
     credentials: {
       accessKeyId: config?.AwsAccessKeyId ?? '',
       secretAccessKey: config?.AwsSecretAccessKey ?? ''
