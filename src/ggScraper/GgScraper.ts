@@ -1,9 +1,9 @@
 import https from 'https';
 import events from 'events';
-import fs from 'fs';
 import http, { IncomingMessage } from 'http';
 import { parsePage } from './parsePage';
 import { WEBSITE_DOMAIN } from './index';
+import { userAgents } from './userAgents';
 export declare interface GgScraper {
     on(event: 'freebies-fetched', listener: (urls: string[]) => void): this;
 }
@@ -12,7 +12,6 @@ export class GgScraper extends events.EventEmitter {
   fetchFreebies () {
     const instance: GgScraper = this;
 
-    const userAgents = fs.readFileSync('src/ggScraper/userAgents.txt', 'utf-8').split(/\r\n|\n/);
     const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
     console.log(`User-Agent: ${userAgent}`);
 
