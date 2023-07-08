@@ -12,7 +12,7 @@ const api = () => {
 
   app.post('/stop', (req: any, res: { send: (arg0: string) => void; }) => {
     res.send('OK');
-    process.kill(process.pid, 'SIGTERM')
+    process.kill(process.pid, 'SIGTERM');
   });
 
   server = app.listen(ApiPort, () => {

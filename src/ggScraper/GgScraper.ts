@@ -12,7 +12,7 @@ export class GgScraper extends events.EventEmitter {
   fetchFreebies () {
     const instance: GgScraper = this;
 
-    const userAgents = fs.readFileSync('src/ggScraper/userAgents.txt', 'utf-8').split('\r\n');
+    const userAgents = fs.readFileSync('src/ggScraper/userAgents.txt', 'utf-8').split(/\r\n|\n/);
     const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
     console.log(`User-Agent: ${userAgent}`);
 
