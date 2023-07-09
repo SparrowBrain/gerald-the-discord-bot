@@ -1,6 +1,8 @@
 import { EventEmitter } from 'events';
+import fs from 'fs';
 import { DebugSubscriptionManager } from '../debugSubsciptionsManager/DebugSubscriptionManager';
 import { findNewEntries, findNewEntriesFilteringOutOldInserts } from './findNewEntries';
+import { MemoryFile } from '../config';
 
 const maxNewLinks = 10;
 
@@ -11,10 +13,11 @@ export declare interface Memory {
 export class Memory extends EventEmitter {
     knownLinks: Set<string> = new Set<string>();
 
-    public memorizeLinks = (links: string[], debugSubsciptionsManager: DebugSubscriptionManager, isFirstFetch: boolean) => {
+    public memorizeLinks = (links: string[], debugSubsciptionsManager: DebugSubscriptionManager) => {
       const newLinks = findNewEntriesFilteringOutOldInserts(this.knownLinks, links);
       const allNewLinks = findNewEntries(this.knownLinks, links);
       this.knownLinks = new Set<string>(links);
+      this.saveMemory();
 
       if (newLinks.length !== allNewLinks.length) {
         debugSubsciptionsManager.broadcastMessage('Links found not on top of the list. They were suppressed:');
@@ -24,7 +27,7 @@ export class Memory extends EventEmitter {
         });
       }
 
-      if (newLinks.length > maxNewLinks && !isFirstFetch) {
+      if (newLinks.length > maxNewLinks) {
         debugSubsciptionsManager.broadcastMessage(`New links exceed maximum new link count (${maxNewLinks}). Total memory size is ${links.length}. Something might be wrong. Supressing new-link-found events.`);
         newLinks.forEach((link: string) => {
           debugSubsciptionsManager.broadcastMessage(`Supressed link: ${link}`);
@@ -41,4 +44,18 @@ export class Memory extends EventEmitter {
     public getLinks = () => {
       return this.knownLinks;
     }
+
+    public saveMemory = (): void => {
+      const links = [...this.knownLinks];
+      fs.writeFileSync(MemoryFile, links.join(','), 'utf-8');
+    };
+
+    public loadMemory = (): void => {
+      if (!fs.existsSync(MemoryFile)) {
+        return;
+      }
+
+      const links = fs.readFileSync(MemoryFile, 'utf-8').split(',');
+      this.knownLinks = new Set<string>(links);
+    };
 }

@@ -19,7 +19,6 @@ const client = new Discord.Client({ intents: [GatewayIntentBits.GuildMessages, G
 let geraldId: string | undefined;
 let freebiesSubscriptionManager: FreebiesSubscriptionManager;
 let debugSubscriptionManager: DebugSubscriptionManager;
-let isFirstFetch = true;
 
 client.once('ready', async () => {
   console.log('Discord client ready!');
@@ -37,14 +36,11 @@ client.once('ready', async () => {
       return;
     }
 
-    memory.memorizeLinks(urls, debugSubscriptionManager, isFirstFetch);
+    memory.on('new-link-found', (link) => {
+      freebiesSubscriptionManager.broadcastMessage(link);
+    });
 
-    if (isFirstFetch) {
-      memory.on('new-link-found', (link) => {
-        freebiesSubscriptionManager.broadcastMessage(link);
-      });
-      isFirstFetch = false;
-    }
+    memory.memorizeLinks(urls, debugSubscriptionManager);
   });
   ggScraper.fetchFreebies();
   setInterval(() => ggScraper.fetchFreebies(), FetchIntervalMs + Math.random() * FetchRandomIntervalMs);
