@@ -37,7 +37,7 @@ export class GgScraper extends events.EventEmitter {
 
     const getFunction = WEBSITE_DOMAIN.startsWith('https') ? https.get : http.get;
     getFunction(WEBSITE_DOMAIN.startsWith('https') ? httpsOptions : httpOptions, function (resp: IncomingMessage) {
-      console.log('Got response: ' + resp.statusCode);
+      console.log(`[${new Date().toLocaleString('LT')}] Got response: ${resp.statusCode}`);
       let data = '';
       // A chunk of data has been recieved.
       resp.on('data', (chunk) => {
@@ -52,7 +52,7 @@ export class GgScraper extends events.EventEmitter {
       });
     })
       .on('error', function (e) {
-        console.log('Got error: ' + e.message);
+        console.log(`[${new Date().toLocaleString('LT')}] Got error: ${e.message}`);
       });
   }
 }

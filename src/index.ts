@@ -30,15 +30,15 @@ client.once('ready', async () => {
     activities: [{ name: '@me help', type: ActivityType.Listening }]
   });
 
+  memory.on('new-link-found', (link) => {
+    freebiesSubscriptionManager.broadcastMessage(link);
+  });
+
   ggScraper.on('freebies-fetched', (urls: string[]): void => {
     if (urls.length === 0) {
       debugSubscriptionManager.broadcastMessage('Empty list fetched for freebies');
       return;
     }
-
-    memory.on('new-link-found', (link) => {
-      freebiesSubscriptionManager.broadcastMessage(link);
-    });
 
     memory.memorizeLinks(urls, debugSubscriptionManager);
   });
