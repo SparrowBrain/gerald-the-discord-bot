@@ -1,9 +1,9 @@
 name: Continuous Integration
 concurrency: ci
 
-# on:
-#   push:
-#     branches: [master]
+on:
+  push:
+    branches: [master]
 
 jobs:
   build:
@@ -46,48 +46,3 @@ jobs:
         with:
           name: ${{ steps.output_version.outputs.version }}
           path: build-zip
-
-  deploy:
-    needs: [build]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{needs.build.outputs.version}}
-
-      - run: mkdir deploy-package
-      - name: Unzip
-        run: unzip -d deploy-package ${{needs.build.outputs.version}}.zip
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET }}
-          aws-region: eu-north-1
-
-      - name: Push to S3
-        run: |
-          aws deploy push \
-            --application-name gerald-deploy \
-            --ignore-hidden-files \
-            --s3-location s3://gerald-deploy/${{needs.build.outputs.version}}.zip \
-            --source deploy-package
-
-      - name: Deploy Revision
-        run: |
-          deploymentId=$( aws deploy create-deployment \
-            --application-name gerald-deploy \
-            --deployment-group-name gerald-deployment-group \
-            --deployment-config-name CodeDeployDefault.OneAtATime \
-            --file-exists-behavior OVERWRITE \
-            --ignore-application-stop-failures \
-            --s3-location bucket=gerald-deploy,key=${{needs.build.outputs.version}}.zip,bundleType=zip \
-            | jq '.deploymentId' )
-          echo "DEPLOYMENT_ID=$deploymentId" >> "$GITHUB_ENV"
-
-      - name: Verify Deployment
-        run: |
-          aws deploy wait deployment-successful --deployment-id ${{ env.DEPLOYMENT_ID }}
