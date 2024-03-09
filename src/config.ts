@@ -6,9 +6,9 @@ dotenv.config();
 export const Token = process.env.DISCORD_BOT_TOKEN;
 
 export const SubsProvider: SubscriptionsProvider = process.env.GERALD_SUBS_PROVIDER as SubscriptionsProvider || SubscriptionsProvider.File;
-export const FreebiesSubsFile: string = 'subs.txt';
-export const DebugSubsFile: string = 'debugSubs.txt';
-export const MemoryFile :string = 'memory.txt';
+export const FreebiesSubsFile: string = process.env.FREEBIES_SUBS_FILE ?? 'subs.txt';
+export const DebugSubsFile: string = process.env.DEBUG_SUBS_FILE ?? 'debugSubs.txt';
+export const MemoryFile :string = process.env.MEMORY_FILE ?? 'memory.txt';
 
 export const AwsAccessKeyId = process.env.AWS_ACCESS_KEY_ID;
 export const AwsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
