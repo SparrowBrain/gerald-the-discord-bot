@@ -39,7 +39,7 @@ jobs:
 
       - run: mkdir build-zip
       - name: Generate deployment package
-        run: zip -r build-zip/$VERSION.zip dist node_modules package.json appspec.yml scripts
+        run: zip -r build-zip/$VERSION.zip dist node_modules package.json
 
       - name: Publish artifact
         uses: actions/upload-artifact@master
