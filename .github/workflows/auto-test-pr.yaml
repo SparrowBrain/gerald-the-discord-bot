@@ -21,7 +21,7 @@ jobs:
               direction: "asc",
             });
 
-            let dependabotPR = undefined;
+            let dependabotPRs = [];
             for (const pr of pullRequests.data){
               if(pr.user.login === DEPENDABOT_NAME){
                 const commits = await github.rest.pulls.listCommits({
@@ -47,17 +47,18 @@ jobs:
                   continue;
                 }
 
-                dependabotPR = pr;
-                core.info(`Found PR: ${dependabotPR.url}`);
-                break;
+                dependabotPRs.push(pr);
               }
             }
 
-            if(dependabotPR === undefined){
+            if(dependabotPRs.length === 0){
               core.info("No dependabot PRs found. Stopping.");
               return;
             }
 
+            let dependabotPR = dependabotPRs[Math.floor(Math.random() * dependabotPRs.length)];
+            core.info(`Selected random PR: ${dependabotPR.url}`);
+            
             // Truncate the body to keep the size of the payload under the max
             if (dependabotPR.body) {
               dependabotPR.body = dependabotPR.body.slice(0, 1000)
