@@ -2,7 +2,7 @@ const Plant = require('@plant/plant');
 const { createServer } = require('@plant/http');
 const fs = require('fs');
 // for server node apps
-const NodeEnvironment = require('jest-environment-node');
+const NodeEnvironment = require('jest-environment-node').TestEnvironment;
 
 // for browser js apps
 // const NodeEnvironment = require('jest-environment-jsdom');
