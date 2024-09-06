@@ -1,4 +1,4 @@
-import Discord, { ActivityType, GatewayIntentBits, Partials, TextBasedChannel } from 'discord.js';
+import Discord, { ActivityType, GatewayIntentBits, Partials, TextChannel } from 'discord.js';
 import { Token, FetchIntervalMs, FetchRandomIntervalMs } from './config';
 import isLinksMessage from './messageFilters/isLinksMessage';
 import isHelpMessage from './messageFilters/isHelpMessage';
@@ -83,7 +83,7 @@ client.on('messageCreate', (message) => {
       const links = memory.getLinks();
       console.log(links);
       try {
-        (message.channel as TextBasedChannel).send([...links].join('\r\n'));
+        (message.channel as TextChannel).send([...links].join('\r\n'));
       } catch (err) {
         console.error(err);
       }

@@ -1,4 +1,4 @@
-import { TextBasedChannel } from 'discord.js';
+import { TextBasedChannel, TextChannel } from 'discord.js';
 import { EventEmitter } from 'events';
 import { DebugSubscriptionManager } from '../debugSubsciptionsManager/DebugSubscriptionManager';
 import { Broadcast } from '../shared/subscriptions/Broadcast';
@@ -32,30 +32,30 @@ export class FreebiesSubscriptionManager extends EventEmitter {
 
   public subscribe (channel: TextBasedChannel) {
     if (this.subscriptions.has(channel.id)) {
-      channel.send("Already spammin'...");
+      (channel as TextChannel).send("Already spammin'...");
     } else {
       this.addSubscription(channel);
-      channel.send('Starting spam!');
+      (channel as TextChannel).send('Starting spam!');
     }
   }
 
   public unsubscribe (channel: TextBasedChannel) {
     if (this.subscriptions.has(channel.id)) {
-      channel.send('ok...');
+      (channel as TextChannel).send('ok...');
       this.removeSubscription(channel);
     } else {
-      channel.send("I'm not doing anythin'...");
+      (channel as TextChannel).send("I'm not doing anythin'...");
     }
   }
 
   public tellSubsNumber (channel: TextBasedChannel) {
     const subsCount = this.subscriptions.size;
-    channel.send('Currently I have ' + subsCount + ' freebies subscribers.');
+    (channel as TextChannel).send('Currently I have ' + subsCount + ' freebies subscribers.');
   }
 
   private addSubscription (channel: TextBasedChannel) {
     const sendToChannel = (link: string): void => {
-      channel.send(link)
+      (channel as TextChannel).send(link)
         .catch((reason:any) => this.debugSubsciptionsManager.broadcastMessage(`Error while sending message to ${channel.id} channel. ${reason}`));
     };
     this.subscriptions.set(channel.id, sendToChannel);
