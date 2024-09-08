@@ -2,7 +2,7 @@
  * @jest-environment ./tests/acceptance/testEnvironment
  */
 
-import Discord, { GatewayIntentBits, Partials, TextChannel } from 'discord.js';
+import Discord, { DMChannel, GatewayIntentBits, Partials } from 'discord.js';
 import { ScrapeUrl, TestChannelId, Token } from '../../src/config';
 import { LivePage } from './constants';
 import { getGameFloodPage, getInitPage, getNewGameOnSteamPage, getNewNonSubscriberGamePage, getNewsItems, getOldGamePage } from './pages/pages';
@@ -10,7 +10,7 @@ import { NewsItem } from './pages/types';
 const fs = require('fs');
 
 let geraldId:string|undefined;
-let channel: TextChannel;
+let channel: DMChannel;
 let newsItems :NewsItem[] = [];
 const client = new Discord.Client({ intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages], partials: [Partials.Channel] });
 const messages:Discord.Message[] = [];
@@ -19,7 +19,7 @@ describe('freebies', () => {
   beforeAll(async () => {
     client.once('ready', async () => {
       geraldId = client.user?.id;
-      channel = await client.channels.fetch(TestChannelId) as TextChannel;
+      channel = await client.channels.fetch(TestChannelId) as DMChannel;
     });
 
     client.on('messageCreate', (message) => {
