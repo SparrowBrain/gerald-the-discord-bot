@@ -1,0 +1,5 @@
+{ 
+    "DiscordBotToken": "ABC",
+    "FetchInterval": 3600000,
+    "FetchIntervalRandom": 900000
+}
