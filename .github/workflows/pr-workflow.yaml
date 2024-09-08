@@ -33,6 +33,14 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Create subs file for tests # Workaround for bot not receiving messages from test channel
+        uses: "DamianReeves/write-file-action@master"
+        with:
+          path: subs.txt
+          write-mode: overwrite
+          contents: |
+            ${{ secrets.TEST_CHANNEL_ID }}
+
       - run: npm start & npx wait-on -t 60000 http://localhost:${{ env.API_PORT }}/health
       - run: npm test
 
