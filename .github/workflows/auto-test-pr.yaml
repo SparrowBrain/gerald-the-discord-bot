@@ -57,7 +57,7 @@ jobs:
               return;
             }
 
-            dependabotPRs.sort((a, b) => a.comments - b.comments);
+            dependabotPRs.sort((a, b) => b.comments - a.comments);
             let dependabotPR = dependabotPRs[0];
             core.info(`Selected PR with fewest comments: ${dependabotPR.url}`);
 
