@@ -48,7 +48,18 @@ jobs:
                   continue;
                 }
 
-                dependabotPRs.push(pr);
+                const prContent = await github.rest.pulls.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                });
+
+                if(prContent.mergeable !== false){
+                  core.info(`PR ${pr.url} is either mergeable or being evaluated. Skipping.`);
+                  continue;
+                }
+
+                dependabotPRs.push(prContent);
               }
             }
 
@@ -57,7 +68,7 @@ jobs:
               return;
             }
 
-            dependabotPRs.sort((a, b) => b.comments - a.comments);
+            dependabotPRs.sort((a, b) => a.comments - b.comments);
             let dependabotPR = dependabotPRs[0];
             core.info(`Selected PR with fewest comments: ${dependabotPR.url}`);
 
