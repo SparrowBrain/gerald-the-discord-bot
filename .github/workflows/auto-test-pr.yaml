@@ -54,11 +54,6 @@ jobs:
                   pull_number: pr.number,
                 });
 
-                if(prContent.mergeable !== false){
-                  core.info(`PR ${pr.url} is either mergeable or being evaluated. Skipping.`);
-                  continue;
-                }
-
                 dependabotPRs.push(prContent);
               }
             }
