@@ -36,11 +36,6 @@ jobs:
                   continue;
                 }
 
-                if(pr.mergeable !== false){
-                  core.info(`PR ${pr.url} is either mergeable or being evaluated. Skipping.`);
-                  continue;
-                }
-
                 const comments = await github.rest.issues.listComments({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -62,8 +57,9 @@ jobs:
               return;
             }
 
-            let dependabotPR = dependabotPRs[Math.floor(Math.random() * dependabotPRs.length)];
-            core.info(`Selected random PR: ${dependabotPR.url}`);
+            dependabotPRs.sort((a, b) => a.comments - b.comments);
+            let dependabotPR = dependabotPRs[0];
+            core.info(`Selected PR with fewest comments: ${dependabotPR.url}`);
 
             // Truncate the body to keep the size of the payload under the max
             if (dependabotPR.body) {
