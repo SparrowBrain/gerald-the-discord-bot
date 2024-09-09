@@ -47,14 +47,11 @@ jobs:
                   core.info(`${pr.url} already has the test comment for sha=${pr.head.sha} issued. Skipping.`);
                   continue;
                 }
-
-                const prContent = await github.rest.pulls.get({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  pull_number: pr.number,
+               
+                dependabotPRs.push({
+                  pr: pr,
+                  comments: comments.data.length,
                 });
-
-                dependabotPRs.push(prContent);
               }
             }
 
@@ -65,17 +62,17 @@ jobs:
 
             dependabotPRs.sort((a, b) => a.comments - b.comments);
             let dependabotPR = dependabotPRs[0];
-            core.info(`Selected PR with fewest comments: ${dependabotPR.url}`);
+            core.info(`Selected PR with fewest comments: ${dependabotPR\.pr\.url}`);
 
             // Truncate the body to keep the size of the payload under the max
-            if (dependabotPR.body) {
-              dependabotPR.body = dependabotPR.body.slice(0, 1000)
+            if (dependabotPR\.pr\.body) {
+              dependabotPR\.pr\.body = dependabotPR\.pr\.body.slice(0, 1000)
             }
 
             const clientPayload = {
-              pull_request: dependabotPR,
+              pull_request: dependabotPR.pr,
               slash_command: {
-                sha: dependabotPR.head.sha,
+                sha: dependabotPR\.pr\.head.sha,
               }
             };
 
@@ -87,11 +84,11 @@ jobs:
               client_payload: clientPayload,
             });
 
-            const commentBody = `@dependabot recreate sha=${dependabotPR.head.sha}`;
+            const commentBody = `@dependabot recreate sha=${dependabotPR\.pr\.head.sha}`;
             core.info(`Issuing comment: "${commentBody}"`);
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: dependabotPR.number,
+              issue_number: dependabotPR\.pr\.number,
               body: commentBody,
             });
