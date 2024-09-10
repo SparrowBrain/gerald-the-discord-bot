@@ -15,7 +15,7 @@ jobs:
           app_id: "${{ secrets.LITTLE_BUDDY_APP_ID }}"
           private_key: "${{ secrets.LITTLE_BUDDY_PRIVATE_KEY }}"
 
-      - uses: mitto98/dependabot-automerge-action
+      - uses: mitto98/dependabot-automerge-action@v1.0.1
         with:
           token: ${{ steps.generate_token.outputs.token }}
           merge-major: true
