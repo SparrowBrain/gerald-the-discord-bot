@@ -18,16 +18,16 @@ jobs:
     steps:
       - name: Check secrets
         if: ${{ env.DISCORD_BOT_TOKEN == null }}
-        uses: actions/github-script@v3
+        uses: actions/github-script
         with:
           script: |
             core.setFailed('Secrets not available.')
 
       - name: Branch based PR checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout
 
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node
         with:
           node-version: "22.x"
       - run: npm ci
@@ -49,7 +49,7 @@ jobs:
 
       - name: Fail cancelled workflow
         if: ${{ cancelled() }}
-        uses: actions/github-script@v3
+        uses: actions/github-script
         with:
           script: |
             core.setFailed('Workflow cancelled.')
