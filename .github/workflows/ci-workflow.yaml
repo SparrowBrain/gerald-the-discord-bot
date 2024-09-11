@@ -47,7 +47,7 @@ jobs:
 
       - run: mkdir build
       - name: Generate deployment package
-        run: cp dist node_modules package.json build
+        run: cp -r dist node_modules package.json build
 
       - name: Publish artifact
         uses: actions/upload-artifact@master
