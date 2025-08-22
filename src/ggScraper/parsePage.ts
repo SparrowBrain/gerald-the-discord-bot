@@ -1,25 +1,33 @@
-import * as cheerio from 'cheerio';
+import Parser from 'rss-parser';
 
-export const parsePage = (page: string) => {
-  const $ = cheerio.load(page);
-  const links = filterOutLinksWithParameters(
-    unique(getAllFreebieLinks($)));
-
-  return links;
+type CustomFeed = {title: string};
+type CustomItem = {
+  title: string;
+  description: string;
+  pubDate: Date;
+  link: string;
+  guid: string;
+  creator?: string;
+  comments?: number;
 };
 
-function getAllFreebieLinks ($: cheerio.Root): string[] {
-  return $('a[href^="/freebie/"]')
-    .map(function (i, el) {
-      // this === el
-      return $(el).attr('href');
-    }).get();
-}
+export const parsePage = async (page: string) => {
+  const parser: Parser<CustomFeed, CustomItem> = new Parser({
+    customFields: {
+      item: ['link']
+    }
+  });
+  try {
+    const feed = await parser.parseString(page);
+    console.log(feed.title);
+    const links = unique(feed.items.map(item => { return item.link }));
+    return links;
+  } catch (error) {
+    console.error('Error parsing RSS feed:', error);
+    return [];
+  }
+};
 
 function unique (array: string[]): string[] {
   return [...new Set(array)];
-}
-
-function filterOutLinksWithParameters (links: string[]): string[] {
-  return links.filter((x: string) => !x.includes('#'));
 }

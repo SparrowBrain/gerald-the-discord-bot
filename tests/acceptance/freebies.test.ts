@@ -3,7 +3,7 @@
  */
 
 import Discord, { DMChannel, GatewayIntentBits, Partials } from 'discord.js';
-import { ScrapeUrl, TestChannelId, Token } from '../../src/config';
+import { TestChannelId, Token } from '../../src/config';
 import { LivePage } from './constants';
 import { getGameFloodPage, getInitPage, getNewGameOnSteamPage, getNewNonSubscriberGamePage, getNewsItems, getOldGamePage } from './pages/pages';
 import { NewsItem } from './pages/types';
@@ -74,7 +74,7 @@ describe('freebies', () => {
 
     await delay(5000);
     const message = messages.shift();
-    expect(message!.content).toBe(ScrapeUrl + '/freebie/free-new-game-on-steam/');
+    expect(message!.content).toBe('https://gg.deals/freebie/free-new-game-on-steam/');
   }, 30000);
 
   it('should not show a new game for non-subscribers', async () => {

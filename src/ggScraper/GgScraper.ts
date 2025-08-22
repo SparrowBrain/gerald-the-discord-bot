@@ -44,11 +44,10 @@ export class GgScraper extends events.EventEmitter {
         data += chunk;
       });
       // The whole response has been received. Print out the result.
-      resp.on('end', function () {
-        const links = parsePage(data);
-        const fullLinks = links.map(element => { return WEBSITE_DOMAIN + element; });
-        console.log(fullLinks);
-        instance.emit('freebies-fetched', fullLinks);
+      resp.on('end', async function () {
+        const links = await parsePage(data);
+        console.log(links);
+        instance.emit('freebies-fetched', links);
       });
     })
       .on('error', function (e) {
