@@ -15,7 +15,7 @@ export class GgScraper extends events.EventEmitter {
     const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
     console.log(`User-Agent: ${userAgent}`);
 
-    const url = new URL(WEBSITE_DOMAIN + '/news/freebies');
+    const url = new URL(WEBSITE_DOMAIN + '/news/freebies/feed/');
 
     const httpsOptions: https.RequestOptions = {
       protocol: url.protocol,

@@ -15,9 +15,9 @@ class TestEnvironment extends NodeEnvironment {
 
     const plant = new Plant();
 
-    plant.use('/news/freebies', async function ({ res }) {
+    plant.use('/news/freebies/feed/', async function ({ res }) {
       try {
-        const data = fs.readFileSync('./tests/acceptance/pages/_live.html', 'utf8');
+        const data = fs.readFileSync('./tests/acceptance/pages/_live.xml', 'utf8');
         res.html(data);
       } catch (err) {
         console.error(err);
