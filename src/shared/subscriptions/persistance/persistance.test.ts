@@ -19,7 +19,7 @@ describe('save', () => {
 
     await persistance.save(ids, mockFile);
 
-    expect(saveToFileSpy).toBeCalledWith(ids, mockFile);
+    expect(saveToFileSpy).toHaveBeenCalledWith(ids, mockFile);
   });
 
   it('should throw error when invalid provider is configured', async () => {
@@ -27,7 +27,7 @@ describe('save', () => {
     const persistance = require('./persistance');
     const ids = ['abc', '123'];
 
-    expect(persistance.save(ids, mockFile)).rejects.toThrowError('Invalid subscriptions provider configuraiton');
+    expect(persistance.save(ids, mockFile)).rejects.toThrow('Invalid subscriptions provider configuraiton');
   });
 });
 
@@ -53,6 +53,6 @@ describe('load', () => {
     jest.doMock('../../../config', () => { return { SubsProvider: 'NON EXISTANT PROVIDER' }; });
     const persistance = require('./persistance');
 
-    expect(persistance.load(mockFile)).rejects.toThrowError('Invalid subscriptions provider configuraiton');
+    expect(persistance.load(mockFile)).rejects.toThrow('Invalid subscriptions provider configuraiton');
   });
 });
